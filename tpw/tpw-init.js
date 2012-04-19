@@ -33,7 +33,7 @@ TPW = function () {
     var self = this;
     if (this.loaded) {
       var config = options || {};
-      this.jQuery.getScript('tpw/widgets/' + js + '.js', function () {
+      self.jQuery.getScript('tpw/widgets/' + js + '.js', function () {
         window['_' + js].init(self, config);
       });
     } else {
