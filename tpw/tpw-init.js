@@ -37,7 +37,7 @@ TPW = function () {
         window['_' + js].init(self, config);
       });
     } else {
-      setTimeout(function () { self.load(js, options); }, 500);
+      setTimeout(function () { self.load(js, options); }, 50);
     }
   };
 };
