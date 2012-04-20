@@ -2,14 +2,26 @@
     <head>
         <title></title>
     <style type="text/css">
+    body { margin: 0; font-family: sans-serif; }
     .tp-widget {
-      display: inline-block;
+    }
+    #icanhazright {
       float: right;
-      border: 1px solid black;
+      margin-right: 10px;
+    }
+    .widget-config {
+      text-align: center;
+      margin-bottom: 50px;
+      padding: 75px;
+      border-bottom: 1px solid #aaa;
+      -moz-box-shadow: 3px 3px 5px 6px #ddd;
+      -webkit-box-shadow: 3px 3px 5px 6px #ddd;
+      box-shadow: 3px 3px 5px 6px #ddd;
     }
     </style>
-    <!--
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    
+    <!--
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js"></script>
     -->
@@ -18,12 +30,26 @@
     <script type="text/javascript">
     _TPW.init();
     _TPW.load('SalesMetrics', {container: 'icanhazright'});
+    $(function () {
+      $('#widget-config-form').submit(function () {
+        $.each(_TPW.widgets, function (i, e) {
+          e.config.tpProxy = $('#seller-id').val();
+          e.init(e.TPW, e.config);
+        });;
+        return false;
+      });
+    });
     </script>
     </head>
 
     <body>
-        <h1>The Title</h1>
-
+      <div class="widget-config">
+      <form id="widget-config-form" onsubmit="return false;">
+        <p>Seller ID: <input type="text" name="seller-id" id="seller-id"></p>
+        <input type="submit">
+      </form>
+      </div>
+      
         <div id="icanhazright" class="tp-widget">
         </div>
     </body>

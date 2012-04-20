@@ -1,11 +1,6 @@
 TPW = function () {
-  var jQuery, Handlebars, loaded = false;
-  
-  this.jQuery = function () {
-    return jQuery;
-  };
-  
   this.init = function () {
+    this.widgets = [];
     var self = this;
     
     (function (e, a, g, h, f, c, b, d) {
@@ -23,9 +18,7 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
-      $.getScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
-        self.loaded = true;
-      });
+      self.loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () { self.loaded = true; });
     }));
   };
   
@@ -33,12 +26,27 @@ TPW = function () {
     var self = this;
     if (this.loaded) {
       var config = options || {};
-      self.jQuery.getScript('tpw/widgets/' + js + '.js', function () {
+      this.loadScript('tpw/widgets/' + js + '.js', function () {
         window['_' + js].init(self, config);
+        self.widgets.push(window['_' + js]);
       });
     } else {
       setTimeout(function () { self.load(js, options); }, 50);
     }
+  };
+  
+  this.loadScript = function (script, callback) {
+    var c = document.createElement("script");
+    c.type = "text/javascript";
+    c.src = script;
+    c.onload = c.onreadystatechange = function () {
+      if ((!(d = this.readyState) || d === "loaded" || d === "complete")) {
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    };
+    document.getElementsByTagName('head')[0].appendChild(c);
   };
 };
 

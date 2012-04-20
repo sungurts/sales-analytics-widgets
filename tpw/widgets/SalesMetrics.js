@@ -1,15 +1,17 @@
 SalesMetrics = function () {
-  var TPW, config, tpl = {}, endpoint;
+  var TPW, config, tpl = {}, endpoint, tpProxy;
   tpl.styles = '<style type="text/css">\
   .tpw-summary-bar {\
     width: 460px;\
+    min-height: 85px;\
     border: 1px solid #bbb;\
     border-radius: 5px;\
     font-family: sans-serif;\
     font-size: .75em;\
     color: #555;\
   }\
-  .tpw-summary-bar div.tpw-sm-start { margin: 15px; }\
+  .tpw-summary-bar div.tpw-sm-start, .tpw-summary-bar div.tpw-sm-loading { margin: 15px; }\
+  .tpw-summary-bar div.tpw-sm-loading { text-align: center; }\
   .tpw-summary-bar form { margin: 0px; padding: 0px; }\
   .tpw-summary-bar div.tpw-sm-title-bar { display: block; position: relative; line-height: 35px; vertical-align: middle; padding-left: 20px;\
     background-image: linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
@@ -37,7 +39,7 @@ SalesMetrics = function () {
   .tpw-summary-bar .tpw-clear { display: block; clear: both; }\
   .tpw-summary-bar div.tpw-sm-values div { text-align: center; position: relative; float: left; margin: 10px; }\
 </style>';
-  tpl.noResults = Handlebars.compile('No results');
+  tpl.noResults = 'No results';
   tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar"><div class="tpw-sm-title-bar">{{{title}}}</div><div class="tpw-sm-content">{{{content}}}</div><div class="tpw-clear"></div></div>');
   tpl.form = Handlebars.compile('<form id="tpw-sm-form">\
     Product: <input type="text" name="keyword" size="15" value="{{productValue}}">\
@@ -51,6 +53,7 @@ SalesMetrics = function () {
     <input type="submit" name="tpw-sm-submit" value="GO">\
     </form>');
   tpl.start = '<div class="tpw-sm-start">Enter a search above...</div>';
+  tpl.loading = '<div class="tpw-sm-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
   tpl.summaryBar = Handlebars.compile('<div class="tpw-sm-values">\
     <div><strong>Total Sales</strong><br>{{totalSalesUSD}}</div>\
     <div><strong>Avg. Price</strong><br>{{averagePriceOfItems}}</div>\
@@ -61,8 +64,9 @@ SalesMetrics = function () {
   this.init = function (tpw, config) {
     this.TPW = tpw;
     this.config = config;
-    this.draw();
     this.endpoint = config.endpoint || 'http://sales-metrics.pub.met.dev.terapeak.net:8080/sales-metrics';
+    this.tpProxy = config.tpProxy || 'gameaccessory';
+    this.draw();
   };
   
   this.draw = function () {
@@ -90,11 +94,15 @@ SalesMetrics = function () {
   this.submitForm = function (formObj) {
     var self = this;
     var formData = this.TPW.jQuery(formObj).serializeArray();
-    formData.push({name: 'Terapeak-Proxy', value: 'gameaccessory'});
-    console.log(this.endpoint + '?callback=?');
+    this.TPW.jQuery.each(formData, function (i, e) {
+      if (typeof e.name !== 'undefined' && e.name == 'keyword') {
+        e.value = e.value.split(' ');
+      }
+    });
+    formData.push({name: 'Terapeak-Proxy', value: self.tpProxy});
+    console.log(formData);
+    this.TPW.jQuery('.tpw-sm-content').html(tpl.loading);
     this.TPW.jQuery.getJSON(this.endpoint + '?callback=?', formData, function (data, textStatus) {
-      console.log(data);
-      console.log(textStatus);
       self.drawResults(data);
     });
   };
