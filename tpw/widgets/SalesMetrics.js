@@ -1,5 +1,5 @@
 SalesMetrics = function () {
-  var TPW, config, tpl = {}, endpoint, tpProxy;
+  var tpl = {}, self = this;
   tpl.styles = '<style type="text/css">\
   .tpw-summary-bar {\
     width: 460px;\
@@ -10,7 +10,7 @@ SalesMetrics = function () {
     font-size: .75em;\
     color: #555;\
   }\
-  .tpw-summary-bar div.tpw-sm-start, .tpw-summary-bar div.tpw-sm-loading { margin: 15px; }\
+  .tpw-summary-bar div.tpw-sm-message, .tpw-summary-bar div.tpw-sm-loading { margin: 15px; }\
   .tpw-summary-bar div.tpw-sm-loading { text-align: center; }\
   .tpw-summary-bar form { margin: 0px; padding: 0px; }\
   .tpw-summary-bar div.tpw-sm-title-bar { display: block; position: relative; line-height: 35px; vertical-align: middle; padding-left: 20px;\
@@ -39,7 +39,7 @@ SalesMetrics = function () {
   .tpw-summary-bar .tpw-clear { display: block; clear: both; }\
   .tpw-summary-bar div.tpw-sm-values div { text-align: center; position: relative; float: left; margin: 10px; }\
 </style>';
-  tpl.noResults = 'No results';
+  tpl.noResults = '<div class="tpw-sm-message">No results.</div>';
   tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar"><div class="tpw-sm-title-bar">{{{title}}}</div><div class="tpw-sm-content">{{{content}}}</div><div class="tpw-clear"></div></div>');
   tpl.form = Handlebars.compile('<form id="tpw-sm-form">\
     Product: <input type="text" name="keyword" size="15" value="{{productValue}}">\
@@ -52,7 +52,7 @@ SalesMetrics = function () {
     </select>\
     <input type="submit" name="tpw-sm-submit" value="GO">\
     </form>');
-  tpl.start = '<div class="tpw-sm-start">Enter a search above...</div>';
+  tpl.start = '<div class="tpw-sm-message">Enter a search above...</div>';
   tpl.loading = '<div class="tpw-sm-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
   tpl.summaryBar = Handlebars.compile('<div class="tpw-sm-values">\
     <div><strong>Total Sales</strong><br>{{totalSalesUSD}}</div>\
@@ -63,24 +63,24 @@ SalesMetrics = function () {
 
   this.init = function (tpw, config) {
     this.TPW = tpw;
+    this.jQuery = jQuery;
     this.config = config;
     this.endpoint = config.endpoint || 'http://sales-metrics.pub.met.dev.terapeak.net:8080/sales-metrics';
     this.tpProxy = config.tpProxy || 'gameaccessory';
-    this.draw();
+    draw();
   };
   
-  this.draw = function () {
-    var self = this;
-    if (self.TPW.jQuery('#' + self.config.container)) {
+  var draw = function () {
+    if (self.jQuery('#' + self.config.container)) {
       var htmlResult = tpl.wrapper({title: tpl.form({productValue: ''}), content: tpl.start});
-      self.TPW.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
-      self.TPW.jQuery('#tpw-sm-form').submit(function () { self.submitForm(this); return false; });
+      self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
+      self.jQuery('#tpw-sm-form').submit(function () { submitForm(this); return false; });
     } else {
       // container doesn't seem to exist...?
     }
   };
   
-  this.drawResults = function (data) {
+  var drawResults = function (data) {
     var summaryBar = tpl.summaryBar({
       totalSalesUSD: data.results[0].totalSalesUSD,
       averagePriceOfItems: data.results[0].averagePriceOfItems,
@@ -88,22 +88,23 @@ SalesMetrics = function () {
       totalShippingCharges: data.results[0].totalShippingCharges,
       numItemsSold: data.results[0].numItemsSold
     });
-    this.TPW.jQuery('.tpw-sm-content').html(summaryBar);
+    self.jQuery('.tpw-sm-content').html(summaryBar);
   };
   
-  this.submitForm = function (formObj) {
-    var self = this;
-    var formData = this.TPW.jQuery(formObj).serializeArray();
-    this.TPW.jQuery.each(formData, function (i, e) {
+  var submitForm = function (formObj) {
+    var formData = self.jQuery(formObj).serializeArray();
+    self.jQuery.each(formData, function (i, e) {
       if (typeof e.name !== 'undefined' && e.name == 'keyword') {
         e.value = e.value.split(' ');
       }
     });
-    formData.push({name: 'Terapeak-Proxy', value: self.tpProxy});
-    console.log(formData);
-    this.TPW.jQuery('.tpw-sm-content').html(tpl.loading);
-    this.TPW.jQuery.getJSON(this.endpoint + '?callback=?', formData, function (data, textStatus) {
-      self.drawResults(data);
+    self.jQuery('.tpw-sm-content').html(tpl.loading);
+    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy, formData, function (data, textStatus) {
+      if (data.results.length) {
+        drawResults(data);
+      } else {
+        self.jQuery('.tpw-sm-content').html(tpl.noResults);
+      }
     });
   };
 };
