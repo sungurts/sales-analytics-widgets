@@ -3,12 +3,6 @@
         <title></title>
     <style type="text/css">
     body { margin: 0; font-family: sans-serif; }
-    .tp-widget {
-    }
-    #icanhazright {
-      float: right;
-      margin-right: 10px;
-    }
     .widget-config {
       text-align: center;
       margin-bottom: 50px;
@@ -18,11 +12,17 @@
       -webkit-box-shadow: 3px 3px 5px 6px #ddd;
       box-shadow: 3px 3px 5px 6px #ddd;
     }
-    label { width: 150px; display: inline-block; text-align: right; }
+    .widget-container {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .widget-container h4 { margin: 50px 0px; border-bottom: 1px solid #ccc; }
+    label { width: 90px; display: inline-block; text-align: right; }
+    blockquote { color: #bbb; font-size: .7em; }
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    
     <!--
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js"></script>
@@ -47,14 +47,19 @@
 
     <body>
       <div class="widget-config">
+      <h4>Global Settings</h4>
       <form id="widget-config-form" onsubmit="return false;">
         <p><label for="seller-id">Seller ID:</label> <input type="text" name="seller-id" id="seller-id"></p>
         <input type="submit">
       </form>
+      <blockquote>Please note: other than the settings in the above form, each widget functions completely independently.</blockquote>
       </div>
-      
-        <div id="icanhazright" class="tp-widget">
+      <div class="widget-container">
+        <h4>Sales Metrics Widget</h4>
+        <div id="icanhazright">
         </div>
+        <h4>Seller Sales Widget</h4>
         <div id="SellerSales"></div>
+      </div>
     </body>
 </html>

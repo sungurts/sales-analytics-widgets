@@ -2,7 +2,6 @@ TPW = function () {
   var self = this;
   this.init = function () {
     this.widgets = [];
-    
     (function (e, a, g, h, f, c, b, d) {
         if (!(f = e.jQuery) || g > f.fn.jquery || h(f)) {
             c = a.createElement("script");
@@ -18,9 +17,16 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
-      loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () { self.loaded = true; });
+      loadScript('tpw/libs/jshashtable-2.1.js', function () {
+        loadScript('tpw/libs/jquery.numberformatter-1.2.3.min.js', function () {
+          loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
+            registerHandlebarHelpers();
+            self.loaded = true;
+          });
+        });
+      });
     }));
-  };
+  }
   
   this.load = function (js, options) {
     if (this.loaded) {
@@ -29,25 +35,28 @@ TPW = function () {
         window['_' + js].init(self, config);
         self.widgets.push(window['_' + js]);
       });
-      console.log(Handlebars);
     } else {
       setTimeout(function () { self.load(js, options); }, 50);
     }
-  };
+  }
   
   var loadScript = function (script, callback) {
     var c = document.createElement("script");
     c.type = "text/javascript";
     c.src = script;
-    c.onload = c.onreadystatechange = function () {
-      if ((!(d = this.readyState) || d === "loaded" || d === "complete")) {
-        if (typeof callback === 'function') {
-          callback();
-        }
+    c.onload = function () {
+      if (typeof callback === 'function') {
+        callback();
       }
     };
     document.getElementsByTagName('head')[0].appendChild(c);
-  };
+  }
+  
+  var registerHandlebarHelpers = function () {
+    Handlebars.registerHelper('formatCurrency', function (number) {
+      return '$' + self.jQuery.formatNumber(number.toString(), {format:"#,##0.00", locale:"us"});
+    });
+  }
 };
 
 _TPW = new TPW();
