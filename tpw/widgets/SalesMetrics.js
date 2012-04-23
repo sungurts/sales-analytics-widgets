@@ -65,8 +65,7 @@ SalesMetrics = function () {
     this.TPW = tpw;
     this.jQuery = jQuery;
     this.config = config;
-    this.apiKey = config.apiKey;
-    this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
+    this.endpoint = config.endpoint || 'http://sales-metrics.pub.met.dev.terapeak.net:8080/sales-metrics';
     this.tpProxy = config.tpProxy || 'gameaccessory';
     draw();
   };
@@ -100,7 +99,7 @@ SalesMetrics = function () {
       }
     });
     self.jQuery('.tpw-sm-content').html(tpl.loading);
-    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey, formData, function (data, textStatus) {
+    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy, formData, function (data, textStatus) {
       if (data.results.length) {
         drawResults(data);
       } else {
