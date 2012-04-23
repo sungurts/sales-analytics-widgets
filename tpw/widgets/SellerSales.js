@@ -13,8 +13,8 @@ SellerSales = function () {
     '    width: 200px;',
     '  }',
     '  .tpw-summary-bar {',
-    '    width: 460px;',
-    '    min-height: 85px;',
+    '    width: 500px;',
+    '    min-height: 90px;',
     '    border: 1px solid #bbb;',
     '    border-radius: 5px;',
     '    font-family: sans-serif;',
@@ -61,7 +61,7 @@ SellerSales = function () {
 
   tpl.form = Handlebars.compile([
     '<form id="tpw-ss-form">',
-    '  Keywords: <input type="text" name="keywords" size="15" value="{{keywordValue}}">',
+    '  Keywords: <input type="text" name="keyword" size="15" value="{{keywordValue}}">',
     '  Date Range:',
     '  <select name="timeUnit">',
     '    <option value="HOUR">Last Hour</option>',
@@ -107,6 +107,7 @@ SellerSales = function () {
     this.TPW = tpw;
     this.jQuery = tpw.jQuery;
     this.config = config;
+    this.apiKey = config.apiKey;
     this.endpoint = config.endpoint || 'http://haproxy.pub.met.dev.terapeak.net/seller-sales';
     this.tpProxy = config.tpProxy || 'gameaccessory';
     draw();
@@ -118,7 +119,7 @@ SellerSales = function () {
 
   var draw = function () {
     if (self.jQuery('#' + self.config.container)) {
-      var htmlResult = tpl.wrapper({title:tpl.form({keywordValue:''}), content: null});
+      var htmlResult = tpl.wrapper({title:tpl.form({keywordValue:''}), content:null});
       self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
 
       self.jQuery('#tpw-ss-form').submit(function () {
@@ -138,17 +139,23 @@ SellerSales = function () {
   };
 
   var submitForm = function (formObj) {
-    var formData = self.jQuery(formObj).serializeArray();
+    var formData = self.jQuery(formObj).serializeArray(), formDataString = '';
     self.jQuery.each(formData, function (i, e) {
-      if (typeof e.name !== 'undefined' && e.name == 'keyword') {
-        e.value = e.value.split(' ');
+      if (typeof e.name !== 'undefined' && e.name == 'keyword' && e.value.indexOf(' ') > -1) {
+        e.value = self.jQuery.trim(e.value);
+        var keywordSplit = e.value.split(' ');
+        self.jQuery.each(keywordSplit, function (keywordIndex, subValue) {
+          formDataString += '&' + e.name + '=' + subValue;
+        });
+      } else {
+        formDataString += '&' + e.name + '=' + e.value;
       }
     });
 
     self.jQuery('.tpw-ss-content').html(tpl.loading);
     self.jQuery.getJSON(
-      self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy,
-      formData,
+      self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
+      undefined,
       function (data, textStatus) {
         if (data.results.length) {
           self.drawChart(data);
