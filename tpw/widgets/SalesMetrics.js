@@ -2,8 +2,8 @@ SalesMetrics = function () {
   var tpl = {}, self = this;
   tpl.styles = '<style type="text/css">\
   .tpw-summary-bar {\
-    width: 460px;\
-    min-height: 85px;\
+    width: 500px;\
+    min-height: 90px;\
     border: 1px solid #bbb;\
     border-radius: 5px;\
     font-family: sans-serif;\
@@ -55,18 +55,18 @@ SalesMetrics = function () {
   tpl.start = '<div class="tpw-sm-message">Enter a search above...</div>';
   tpl.loading = '<div class="tpw-sm-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
   tpl.summaryBar = Handlebars.compile('<div class="tpw-sm-values">\
-    <div><strong>Total Sales</strong><br>{{totalSalesUSD}}</div>\
-    <div><strong>Avg. Price</strong><br>{{averagePriceOfItems}}</div>\
-    <div><strong>Avg. Shipping</strong><br>{{averageShippingPriceOfItems}}</div>\
+    <div><strong>Total Sales</strong><br>{{formatCurrency totalSalesUSD}}</div>\
+    <div><strong>Avg. Price</strong><br>{{formatCurrency averagePriceOfItems}}</div>\
+    <div><strong>Avg. Shipping</strong><br>{{formatCurrency averageShippingPriceOfItems}}</div>\
     <div><strong>Items Sold</strong><br>{{numItemsSold}}</div>\
-    <div><strong>Total Shipping</strong><br>{{totalShippingCharges}}</div><span class="tpw-clear"></span></div>');
+    <div><strong>Total Shipping</strong><br>{{formatCurrency totalShippingCharges}}</div><span class="tpw-clear"></span></div>');
 
   this.init = function (tpw, config) {
     this.TPW = tpw;
     this.jQuery = jQuery;
     this.config = config;
     this.apiKey = config.apiKey;
-    this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
+    this.endpoint = config.endpoint || 'http://sales-metrics.pub.met.dev.terapeak.net:8080/sales-metrics';//'http://terapeak.api.mashery.com/v1/sales-metrics';
     this.tpProxy = config.tpProxy || 'gameaccessory';
     draw();
   };
@@ -94,13 +94,20 @@ SalesMetrics = function () {
   
   var submitForm = function (formObj) {
     var formData = self.jQuery(formObj).serializeArray();
+    var formDataString = '';
     self.jQuery.each(formData, function (i, e) {
-      if (typeof e.name !== 'undefined' && e.name == 'keyword') {
-        e.value = e.value.split(' ');
+      if (typeof e.name !== 'undefined' && e.name == 'keyword' && e.value.indexOf(' ') > -1) {
+        e.value = self.jQuery.trim(e.value);
+        var keywordSplit = e.value.split(' ');
+        self.jQuery.each(keywordSplit, function(keywordIndex, subValue) {
+          formDataString += '&' + e.name + '=' + subValue;
+        });
+      } else {
+        formDataString += '&' + e.name + '=' + e.value;
       }
     });
     self.jQuery('.tpw-sm-content').html(tpl.loading);
-    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey, formData, function (data, textStatus) {
+    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString, undefined, function (data, textStatus) {
       if (data.results.length) {
         drawResults(data);
       } else {
