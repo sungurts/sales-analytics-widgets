@@ -1,7 +1,7 @@
 TPW = function () {
+  var self = this;
   this.init = function () {
     this.widgets = [];
-    var self = this;
     
     (function (e, a, g, h, f, c, b, d) {
         if (!(f = e.jQuery) || g > f.fn.jquery || h(f)) {
@@ -18,24 +18,24 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
-      self.loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () { self.loaded = true; });
+      loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () { self.loaded = true; });
     }));
   };
   
   this.load = function (js, options) {
-    var self = this;
     if (this.loaded) {
       var config = options || {};
-      this.loadScript('tpw/widgets/' + js + '.js', function () {
+      loadScript('tpw/widgets/' + js + '.js', function () {
         window['_' + js].init(self, config);
         self.widgets.push(window['_' + js]);
       });
+      console.log(Handlebars);
     } else {
       setTimeout(function () { self.load(js, options); }, 50);
     }
   };
   
-  this.loadScript = function (script, callback) {
+  var loadScript = function (script, callback) {
     var c = document.createElement("script");
     c.type = "text/javascript";
     c.src = script;

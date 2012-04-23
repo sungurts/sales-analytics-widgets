@@ -18,6 +18,7 @@
       -webkit-box-shadow: 3px 3px 5px 6px #ddd;
       box-shadow: 3px 3px 5px 6px #ddd;
     }
+    label { width: 150px; display: inline-block; text-align: right; }
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -36,6 +37,7 @@
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
           e.config.tpProxy = $('#seller-id').val();
+          e.config.apiKey = $('#api-key').val();
           e.init(e.TPW, e.config);
         });;
         return false;
@@ -47,7 +49,8 @@
     <body>
       <div class="widget-config">
       <form id="widget-config-form" onsubmit="return false;">
-        <p>Seller ID: <input type="text" name="seller-id" id="seller-id"></p>
+        <p><label for="seller-id">Seller ID:</label> <input type="text" name="seller-id" id="seller-id"></p>
+        <p><label for="api-key">API Key:</label> <input type="text" name="api-key" id="api-key"></p>
         <input type="submit">
       </form>
       </div>
