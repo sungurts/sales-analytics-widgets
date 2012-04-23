@@ -9,6 +9,10 @@
       float: right;
       margin-right: 10px;
     }
+    #SellerSales {
+        float: left;
+        margin-left: 10px;
+    }
     .widget-config {
       text-align: center;
       margin-bottom: 50px;
@@ -38,7 +42,7 @@
         $.each(_TPW.widgets, function (i, e) {
           e.config.tpProxy = $('#seller-id').val();
           e.init(e.TPW, e.config);
-        });;
+        });
         return false;
       });
     });
@@ -55,6 +59,7 @@
       
         <div id="icanhazright" class="tp-widget">
         </div>
-        <div id="SellerSales"></div>
+        <div id="SellerSales" class="tp-widget">
+        </div>
     </body>
 </html>
