@@ -108,7 +108,7 @@ SellerSales = function () {
     this.jQuery = tpw.jQuery;
     this.config = config;
     this.apiKey = config.apiKey;
-    this.endpoint = config.endpoint || 'http://haproxy.pub.met.dev.terapeak.net/seller-sales';
+    this.endpoint = config.endpoint || 'http://haproxy.pub.met.dev.terapeak.net/api/v1/seller-sales';
     this.tpProxy = config.tpProxy || 'gameaccessory';
     draw();
   };
