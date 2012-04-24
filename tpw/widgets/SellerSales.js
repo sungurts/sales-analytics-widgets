@@ -129,8 +129,8 @@ SellerSales = function () {
     this.jQuery = tpw.jQuery;
     this.config = config;
     this.apiKey = config.apiKey;
-    this.endpoint = config.endpoint || 'http://localhost:8080/seller-sales';
-    this.tpProxy = config.tpProxy || 'gameaccessory';
+    this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/seller-sales';
+    this.tpProxy = config.tpProxy;
     draw();
   };
 
