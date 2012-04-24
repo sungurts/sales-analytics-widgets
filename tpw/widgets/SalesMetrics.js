@@ -40,11 +40,13 @@ SalesMetrics = function () {
   .tpw-summary-bar div.tpw-sm-values div { text-align: center; position: relative; float: left; margin: 10px; }\
 </style>';
   tpl.noResults = '<div class="tpw-sm-message">No results.</div>';
+  tpl.error = '<div class="tpw-sm-message">An unexpected error has occurred.</div>';
   tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar"><div class="tpw-sm-title-bar">{{{title}}}</div><div class="tpw-sm-content">{{{content}}}</div><div class="tpw-clear"></div></div>');
   tpl.form = Handlebars.compile('<form id="tpw-sm-form">\
     Product: <input type="text" name="keyword" size="15" value="{{productValue}}">\
     Date Range: \
     <select name="dateOffset">\
+      <option value="1">1 Day</option>\
       <option value="7">7 Days</option>\
       <option value="30">30 Days</option>\
       <option value="60">60 Days</option>\
@@ -106,15 +108,23 @@ SalesMetrics = function () {
         formDataString += '&' + e.name + '=' + e.value;
       }
     });
-    self.jQuery('.tpw-sm-content').html(tpl.loading);
-    self.jQuery.getJSON(self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString, undefined, function (data, textStatus) {
-      if (data.results.length) {
-        drawResults(data);
-      } else {
-        self.jQuery('.tpw-sm-content').html(tpl.noResults);
+    self.jQuery.jsonp({
+      beforeSend: function () { self.jQuery('.tpw-sm-content').html(tpl.loading); },
+      url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
+      complete: function (xOptions, textStatus) {
+        if (textStatus !== 'success') {
+          self.jQuery('.tpw-sm-content').html(tpl.error);
+        }
+      },
+      success: function (data, textStatus) {
+        if (data.results.length) {
+          drawResults(data);
+        } else {
+          self.jQuery('.tpw-sm-content').html(tpl.noResults);
+        }
       }
     });
-  };
+  }
 };
 
 _SalesMetrics = new SalesMetrics();
