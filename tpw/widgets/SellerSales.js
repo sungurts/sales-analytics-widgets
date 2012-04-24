@@ -65,6 +65,7 @@ SellerSales = function () {
     '</style>'
   ].join('\n');
 
+  tpl.error = '<div class="tpw-ss-message">An unexpected error has occurred.</div>';
   tpl.noResults = '<div class="tpw-ss-message">No results.</div>';
   tpl.wrapper = Handlebars.compile([
     '<div class="tpw-summary-bar">',
@@ -172,18 +173,22 @@ SellerSales = function () {
       }
     });
 
-    self.jQuery('.tpw-ss-content').html(tpl.loading);
-    self.jQuery.getJSON(
-      self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString + "&useStats=true",
-      undefined,
-      function (data, textStatus) {
+    self.jQuery.jsonp({
+      beforeSend: function () { self.jQuery('.tpw-ss-content').html(tpl.loading); },
+      url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
+      complete: function (xOptions, textStatus) {
+        if (textStatus !== 'success') {
+          self.jQuery('.tpw-ss-content').html(tpl.error);
+        }
+      },
+      success: function (data, textStatus) {
         if (data.results.length) {
           self.drawChart(data, $('#tpw-ss-form #time-unit').val());
         } else {
           self.jQuery('.tpw-ss-content').html(tpl.noResults);
         }
       }
-    );
+    });
   };
 };
 

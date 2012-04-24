@@ -68,8 +68,8 @@ SalesMetrics = function () {
     this.jQuery = jQuery;
     this.config = config;
     this.apiKey = config.apiKey;
-    this.endpoint = config.endpoint || 'http://sales-metrics.pub.met.dev.terapeak.net:8080/sales-metrics';//'http://terapeak.api.mashery.com/v1/sales-metrics';
-    this.tpProxy = config.tpProxy || 'gameaccessory';
+    this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
+    this.tpProxy = config.tpProxy;
     draw();
   };
   
