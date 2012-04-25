@@ -19,14 +19,16 @@ TPW = function () {
       self.jQuery = $;
       loadScript('tpw/libs/jshashtable-2.1.js', function () {
         loadScript('tpw/libs/jquery.numberformatter-1.2.3.min.js', function () {
-          loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
-            registerHandlebarHelpers();
-            self.loaded = true;
+          loadScript('http://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js', function () {
+            loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
+              registerHandlebarHelpers();
+              self.loaded = true;
+            });
           });
         });
       });
     }));
-  }
+  };
   
   this.load = function (js, options) {
     if (this.loaded) {
@@ -38,7 +40,7 @@ TPW = function () {
     } else {
       setTimeout(function () { self.load(js, options); }, 50);
     }
-  }
+  };
   
   var loadScript = function (script, callback) {
     var c = document.createElement("script");
