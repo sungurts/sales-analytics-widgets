@@ -1,5 +1,24 @@
 SellerSales = function () {
-  var self = this, tpl = {};
+  var self = this, tpl = {}, defaults;
+
+  defaults = {
+    'HOUR': {
+      format: 'HH:mm',
+      title: 'Per Minute Seller Sales (last hour)'
+    },
+    'DAY': {
+      format: 'HH:mm',
+      title: 'Per Hour Seller Sales (last day)'
+    },
+    'MONTH': {
+      format: 'MMM-dd',
+      title: 'Per Day Seller Sales (last month)'
+    },
+    'YEAR': {
+      format: 'yyyy-MMM',
+      title: 'Per Month Seller Sales (last year)'
+    }
+  };
 
   tpl.styles = [
     '<style type="text/css">',
@@ -64,7 +83,7 @@ SellerSales = function () {
     '<form id="tpw-ss-form">',
     '  Keywords: <input type="text" name="keyword" size="15" value="{{keywordValue}}">',
     '  Date Range:',
-    '  <select name="timeUnit">',
+    '  <select name="timeUnit" id="time-unit">',
     '    <option value="HOUR">Last Hour</option>',
     '    <option value="DAY" selected>Last Day</option>',
     '    <option value="MONTH">Last 30 Days</option>',
@@ -83,10 +102,11 @@ SellerSales = function () {
     '</div>'
   ].join('\n'));
 
-  this.drawChart = function (data) {
+  this.drawChart = function (data, timeUnit) {
     var record = data.results[0], results = record.values, rows = [], options, chart, chartData;
     self.jQuery.each(results, function (index, value) {
-      rows.push([String(value.key), value.value])
+      var date = new Date(value.key).toString(defaults[timeUnit].format);
+      rows.push([String(date), value.value]);
     });
 
     chartData = new google.visualization.DataTable();
@@ -95,7 +115,7 @@ SellerSales = function () {
     chartData.addRows(rows);
 
     options = {
-      title:record.title,
+      title:defaults[timeUnit].title,
       hAxis:{title:'', titleTextStyle:{ color:'black' }}
     };
 
@@ -163,7 +183,7 @@ SellerSales = function () {
       },
       success: function (data, textStatus) {
         if (data.results.length) {
-          self.drawChart(data);
+          self.drawChart(data, $('#tpw-ss-form #time-unit').val());
         } else {
           self.jQuery('.tpw-ss-content').html(tpl.noResults);
         }
