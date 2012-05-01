@@ -27,8 +27,8 @@
     <script type="text/javascript" src="tpw/tpw-init.js"></script>
     <script type="text/javascript">
     _TPW.init();
-    _TPW.load('SalesMetrics', {container: 'icanhazright'});
-    _TPW.load('SellerSales', {container: 'SellerSales'});
+    _TPW.load('SalesMetrics', {container: 'containerSalesMetrics'});
+    _TPW.load('SellerSales', {container: 'containerSellerSales'});
     $(function () {
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
@@ -54,10 +54,10 @@
       </div>
       <div class="widget-container">
         <h4>Sales Metrics Widget</h4>
-        <div id="icanhazright">
+        <div id="containerSalesMetrics">
         </div>
         <h4>Seller Sales Widget</h4>
-        <div id="SellerSales"></div>
+        <div id="containerSellerSales"></div>
       </div>
     </body>
 </html>

@@ -127,4 +127,4 @@ SalesMetrics = function () {
   }
 };
 
-_SalesMetrics = new SalesMetrics();
+var _SalesMetrics = new SalesMetrics();

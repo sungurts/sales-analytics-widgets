@@ -192,4 +192,4 @@ SellerSales = function () {
   };
 };
 
-_SellerSales = new SellerSales();
+var _SellerSales = new SellerSales();
