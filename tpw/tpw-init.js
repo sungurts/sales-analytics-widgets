@@ -48,9 +48,11 @@ TPW = function () {
     var c = document.createElement("script");
     c.type = "text/javascript";
     c.src = script;
-    c.onload = function () {
-      if (typeof callback === 'function') {
-        callback();
+    c.onload = c.onreadystatechange = function () {
+      if (!(d = this.readyState) || d === "loaded" || d === "complete") {
+        if (typeof callback === 'function') {
+          callback();
+        }
       }
     };
     document.getElementsByTagName('head')[0].appendChild(c);
@@ -63,4 +65,4 @@ TPW = function () {
   }
 };
 
-_TPW = new TPW();
+var _TPW = new TPW();
