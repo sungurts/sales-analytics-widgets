@@ -52,7 +52,7 @@ SalesMetrics = function () {
       <option value="60">60 Days</option>\
       <option value="90">90 Days</option>\
     </select>\
-    <input type="submit" name="tpw-sm-submit" value="GO">\
+    <input type="submit" name="tpw-sm-submit" id="tpw-sm-submit" value="GO">\
     </form>');
   tpl.start = '<div class="tpw-sm-message">Enter a search above...</div>';
   tpl.loading = '<div class="tpw-sm-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
@@ -109,12 +109,16 @@ SalesMetrics = function () {
       }
     });
     self.jQuery.jsonp({
-      beforeSend: function () { self.jQuery('.tpw-sm-content').html(tpl.loading); },
+      beforeSend: function () {
+        self.jQuery('.tpw-sm-content').html(tpl.loading);
+        self.jQuery('#tpw-sm-submit').attr('disabled', 'disabled');
+      },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
         if (textStatus !== 'success') {
           self.jQuery('.tpw-sm-content').html(tpl.error);
         }
+        self.jQuery('#tpw-sm-submit').removeAttr('disabled');
       },
       success: function (data, textStatus) {
         if (data.results.length) {
