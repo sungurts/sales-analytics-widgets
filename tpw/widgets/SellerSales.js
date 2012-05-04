@@ -89,7 +89,7 @@ SellerSales = function () {
     '    <option value="MONTH">Last 30 Days</option>',
     '    <option value="YEAR">Last Year</option>',
     '  </select>',
-    '  <input type="submit" name="tpw-ss-submit" value="GO">',
+    '  <input type="submit" name="tpw-ss-submit" id="tpw-ss-submit" value="GO">',
     '</form>'
   ].join('\n'));
 
@@ -174,12 +174,16 @@ SellerSales = function () {
     });
 
     self.jQuery.jsonp({
-      beforeSend: function () { self.jQuery('.tpw-ss-content').html(tpl.loading); },
+      beforeSend: function () {
+        self.jQuery('.tpw-ss-content').html(tpl.loading);
+        self.jQuery('#tpw-ss-submit').attr('disabled', 'disabled');
+      },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
         if (textStatus !== 'success') {
           self.jQuery('.tpw-ss-content').html(tpl.error);
         }
+        self.jQuery('#tpw-ss-submit').removeAttr('disabled');
       },
       success: function (data, textStatus) {
         if (data.results.length) {
