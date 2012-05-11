@@ -105,7 +105,11 @@ SellerSales = function () {
   this.drawChart = function (data, timeUnit) {
     var record = data.results[0], results = record.values, rows = [], options, chart, chartData;
     self.jQuery.each(results, function (index, value) {
-      var date = Date.parse(value.key).toString(defaults[timeUnit].format);
+      var dateString = value.key.substr(8, 2) + ' '
+        + Date.parse(value.key.substr(5, 2)).toString('MMM') + ' '
+        + value.key.substr(0, 4) + ' '
+        + value.key.substr(11, 8) + ' GMT';
+      var date = new Date(dateString).toString(defaults[timeUnit].format);
       rows.push([String(date), value.value]);
     });
 
