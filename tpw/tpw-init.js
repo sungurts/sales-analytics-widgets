@@ -23,7 +23,9 @@ TPW = function () {
             loadScript('libs/jquery.jsonp-2.3.0.min.js', function () {
               loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
                 registerHandlebarHelpers();
-                self.loaded = true;
+                loadScript('https://www.google.com/jsapi', function () {
+                  self.loaded = true;
+                });
               });
             });
           });

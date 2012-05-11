@@ -105,10 +105,7 @@ SellerSales = function () {
   this.drawChart = function (data, timeUnit) {
     var record = data.results[0], results = record.values, rows = [], options, chart, chartData;
     self.jQuery.each(results, function (index, value) {
-      var dateString = value.key.substr(8, 2) + ' '
-        + Date.parse(value.key.substr(5, 2)).toString('MMM') + ' '
-        + value.key.substr(0, 4) + ' '
-        + value.key.substr(11, 8) + ' GMT';
+      var dateString = Date.parse(value.key).toString('dd MMM yyyy HH:mm:ss') + ' GMT';
       var date = new Date(dateString).toString(defaults[timeUnit].format);
       rows.push([String(date), value.value]);
     });
@@ -123,7 +120,7 @@ SellerSales = function () {
       hAxis:{title:'', titleTextStyle:{ color:'black' }}
     };
 
-    self.jQuery('.tpw-ss-content').html('<div class="tpw-ss-chart" id="tpw-ss-chart"></div>');
+    setContent('<div class="tpw-ss-chart" id="tpw-ss-chart"></div>');
     chart = new google.visualization.ColumnChart(document.getElementById('tpw-ss-chart'));
     chart.draw(chartData, options);
   };
@@ -179,13 +176,13 @@ SellerSales = function () {
 
     self.jQuery.jsonp({
       beforeSend: function () {
-        self.jQuery('.tpw-ss-content').html(tpl.loading);
+        setContent(tpl.loading);
         self.jQuery('#tpw-ss-submit').attr('disabled', 'disabled');
       },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
         if (textStatus !== 'success') {
-          self.jQuery('.tpw-ss-content').html(tpl.error);
+          setContent(tpl.error);
         }
         self.jQuery('#tpw-ss-submit').removeAttr('disabled');
       },
@@ -193,10 +190,14 @@ SellerSales = function () {
         if (data.results.length) {
           self.drawChart(data, $('#tpw-ss-form #time-unit').val());
         } else {
-          self.jQuery('.tpw-ss-content').html(tpl.noResults);
+          setContent(tpl.noResults);
         }
       }
     });
+  };
+  
+  var setContent = function (content) {
+    self.jQuery('.tpw-ss-content').html(content);
   };
 };
 
