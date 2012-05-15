@@ -28,6 +28,10 @@
     _TPW.init();
     _TPW.load('SalesMetrics', {container: 'containerSalesMetrics'});
     _TPW.load('SellerSales', {container: 'containerSellerSales'});
+    
+    _TPW.createGroup('SalesGroup', 'tpw-group-container');
+    _TPW.load('SalesMetrics', {group: 'SalesGroup'});
+    _TPW.load('SellerSales', {group: 'SalesGroup'});
     $(function () {
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
@@ -57,6 +61,9 @@
         </div>
         <h4>Seller Sales Widget</h4>
         <div id="containerSellerSales"></div>
+        
+        <h4>Grouped Widgets</h4>
+        <div id="tpw-group-container"></div>
       </div>
     </body>
 </html>

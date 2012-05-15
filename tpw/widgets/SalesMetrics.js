@@ -10,25 +10,43 @@ SalesMetrics = function () {
     font-size: .75em;\
     color: #555;\
   }\
-  .tpw-summary-bar div.tpw-sm-message, .tpw-summary-bar div.tpw-sm-loading { margin: 15px; }\
-  .tpw-summary-bar div.tpw-sm-loading { text-align: center; }\
+  .tpw-summary-bar div.tpw-message, .tpw-summary-bar div.tpw-loading { margin: 15px; }\
+  .tpw-summary-bar div.tpw-loading { text-align: center; }\
   .tpw-summary-bar form { margin: 0px; padding: 0px; }\
-  .tpw-summary-bar div.tpw-sm-title-bar { display: block; position: relative; line-height: 35px; vertical-align: middle; padding-left: 20px;\
-    background-image: linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-    background-image: -o-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-    background-image: -moz-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-    background-image: -webkit-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-    background-image: -ms-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.08, #D1D1D1), color-stop(0.77, #fafafa));\
-    -webkit-border-top-left-radius: 5px;\
-    -webkit-border-top-right-radius: 5px;\
-    -moz-border-radius-topleft: 5px;\
-    -moz-border-radius-topright: 5px;\
-    border-top-left-radius: 5px;\
-    border-top-right-radius: 5px;\
-   }\
-  .tpw-summary-bar div.tpw-sm-content { display: block; position: relative; }\
-  .tpw-summary-bar div.tpw-sm-values {\
+    .tpw-summary-bar div.tpw-title-bar-inputs, .tpw-summary-bar div.tpw-title-bar {\
+      display: block;\
+      position: relative;\
+      line-height: 35px;\
+      vertical-align: middle;\
+      padding-left: 20px;\
+      background-image: linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+      background-image: -o-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+      background-image: -moz-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+      background-image: -webkit-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+      background-image: -ms-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+      background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.08, #D1D1D1), color-stop(0.77, #fafafa));\
+      -webkit-border-top-left-radius: 5px;\
+      -webkit-border-top-right-radius: 5px;\
+      -moz-border-radius-topleft: 5px;\
+      -moz-border-radius-topright: 5px;\
+      border-top-left-radius: 5px;\
+      border-top-right-radius: 5px;\
+    }\
+    .tpw-summary-bar div.tpw-title-bar {\
+      line-height: 20px;\
+      background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwOTNkMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwNjk5NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");\
+      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0093d0), color-stop(100%, #006997));\
+      background: -webkit-linear-gradient(#0093d0, #006997);\
+      background: -moz-linear-gradient(#0093d0, #006997);\
+      background: -o-linear-gradient(#0093d0, #006997);\
+      background: -ms-linear-gradient(#0093d0, #006997);\
+      background: linear-gradient(#0093d0, #006997);\
+      background-color: #0093d0;\
+      color: white;\
+      text-shadow: 1px 1px 1px #006997;\
+    }\
+  .tpw-summary-bar div.tpw-content { display: block; position: relative; }\
+  .tpw-summary-bar div.tpw-values {\
     position: relative;\
     margin: 5px;\
     background-color: #DCE8F7;\
@@ -37,13 +55,16 @@ SalesMetrics = function () {
     border-radius: 5px;\
   }\
   .tpw-summary-bar .tpw-clear { display: block; clear: both; }\
-  .tpw-summary-bar div.tpw-sm-values div { text-align: center; position: relative; float: left; margin: 10px; }\
+  .tpw-summary-bar div.tpw-values div { text-align: center; position: relative; float: left; margin: 10px; }\
 </style>';
-  tpl.noResults = '<div class="tpw-sm-message">No results.</div>';
-  tpl.error = '<div class="tpw-sm-message">An unexpected error has occurred.</div>';
-  tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar"><div class="tpw-sm-title-bar">{{{title}}}</div><div class="tpw-sm-content">{{{content}}}</div><div class="tpw-clear"></div></div>');
-  tpl.form = Handlebars.compile('<form id="tpw-sm-form">\
-    Product: <input type="text" name="keyword" size="15" value="{{productValue}}">\
+  tpl.noResults = '<div class="tpw-message">No results.</div>';
+  tpl.error = '<div class="tpw-message">An unexpected error has occurred.</div>';
+  tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar">\
+    <div class="tpw-title-bar{{#if inputs}}-inputs{{/if}}">{{{title}}}</div>\
+    <div class="tpw-content">{{{content}}}</div>\
+  <div class="tpw-clear"></div></div>');
+  tpl.form = Handlebars.compile('<form class="tpw-form">\
+    Product: <input type="text" name="keyword" size="15" value="{{keywordValue}}">\
     Date Range: \
     <select name="dateOffset">\
       <option value="1">1 Day</option>\
@@ -52,11 +73,11 @@ SalesMetrics = function () {
       <option value="60">60 Days</option>\
       <option value="90">90 Days</option>\
     </select>\
-    <input type="submit" name="tpw-sm-submit" id="tpw-sm-submit" value="GO">\
+    <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
-  tpl.start = '<div class="tpw-sm-message">Enter a search above...</div>';
-  tpl.loading = '<div class="tpw-sm-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
-  tpl.summaryBar = Handlebars.compile('<div class="tpw-sm-values">\
+  tpl.start = '<div class="tpw-message">Enter a search above...</div>';
+  tpl.loading = '<div class="tpw-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
+  tpl.summaryBar = Handlebars.compile('<div class="tpw-values">\
     <div><strong>Total Sales</strong><br>{{formatCurrency totalSalesUSD}}</div>\
     <div><strong>Avg. Price</strong><br>{{formatCurrency averagePriceOfItems}}</div>\
     <div><strong>Avg. Shipping</strong><br>{{formatCurrency averageShippingPriceOfItems}}</div>\
@@ -67,17 +88,33 @@ SalesMetrics = function () {
     this.TPW = tpw;
     this.jQuery = jQuery;
     this.config = config;
+    this.config.widgetName = this.config.widgetName || 'Sales Metrics';
     this.apiKey = config.apiKey;
     this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
     this.tpProxy = config.tpProxy;
     draw();
   };
   
+  
   var draw = function () {
     if (self.jQuery('#' + self.config.container)) {
-      var htmlResult = tpl.wrapper({title: tpl.form({productValue: ''}), content: tpl.start});
+      var displayInputs = (typeof self.config.displayInputs === 'undefined' || self.config.displayInputs === true);
+      var titleBar;
+      if (displayInputs) {
+        titleBar = tpl.form({keywordValue: ''});
+      } else {
+        titleBar = self.config.widgetName;
+      }
+      var htmlResult = tpl.wrapper({
+        title: titleBar,
+        inputs: displayInputs,
+        content: tpl.start
+      });
       self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
-      self.jQuery('#tpw-sm-form').submit(function () { submitForm(this); return false; });
+      self.jQuery('#' + self.config.container + ' .tpw-form').submit(function () {
+        submitForm(this);
+        return false;
+      });
     } else {
       // container doesn't seem to exist...?
     }
@@ -91,7 +128,7 @@ SalesMetrics = function () {
       totalShippingCharges: data.results[0].totalShippingCharges,
       numItemsSold: data.results[0].numItemsSold
     });
-    self.jQuery('.tpw-sm-content').html(summaryBar);
+    setContent(summaryBar);
   };
   
   var submitForm = function (formObj) {
@@ -110,24 +147,28 @@ SalesMetrics = function () {
     });
     self.jQuery.jsonp({
       beforeSend: function () {
-        self.jQuery('.tpw-sm-content').html(tpl.loading);
-        self.jQuery('#tpw-sm-submit').attr('disabled', 'disabled');
+        setContent(tpl.loading);
+        self.jQuery('#tpw-submit').attr('disabled', 'disabled');
       },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
         if (textStatus !== 'success') {
-          self.jQuery('.tpw-sm-content').html(tpl.error);
+          setContent(tpl.error);
         }
-        self.jQuery('#tpw-sm-submit').removeAttr('disabled');
+        self.jQuery('#tpw-submit').removeAttr('disabled');
       },
       success: function (data, textStatus) {
         if (data.results.length) {
           drawResults(data);
         } else {
-          self.jQuery('.tpw-sm-content').html(tpl.noResults);
+          setContent(tpl.noResults);
         }
       }
     });
+  }
+  
+  var setContent = function (content) {
+    self.jQuery('#' + self.config.container + ' .tpw-content').html(content);
   }
 };
 

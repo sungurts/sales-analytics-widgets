@@ -1,7 +1,9 @@
 TPW = function () {
-  var self = this, path;
+  var self = this;
   this.init = function () {
     this.widgets = [];
+    this.widgetGroups = {};
+    this.widgetCount = 0;
     (function (e, a, g, h, f, c, b, d) {
         if (!(f = e.jQuery) || g > f.fn.jquery || h(f)) {
             c = a.createElement("script");
@@ -38,13 +40,29 @@ TPW = function () {
     if (this.loaded) {
       var config = options || {};
       loadScript('widgets/' + js + '.js', function () {
-        window['_' + js].init(self, config);
+        if (typeof config.group !== 'undefined') {
+          var newDivId = config.group + 'Widget' + self.widgetCount;
+          self.widgetCount++;
+          self.jQuery('#' + self.widgetGroups[config.group].container)
+            .append('<div id="' + newDivId + '"></div>');
+          window['_' + js].init(self, {container: newDivId, displayInputs: false});
+          console.log('creating new div for widget... id: ' + newDivId);
+          console.log('Loading widget into widget group... ' + config.group);
+        } else if (typeof config.container !== 'undefined') {
+          window['_' + js].init(self, config);
+        } else {
+          throw 'No container or widget group provided.';
+        }
         self.widgets.push(window['_' + js]);
       });
     } else {
       setTimeout(function () { self.load(js, options); }, 50);
     }
   };
+  
+  this.createGroup = function (groupId, container) {
+    self.widgetGroups[groupId] = {widgets: null, container: container};
+  }
   
   var loadScript = function (script, callback) {
     var c = document.createElement("script");
@@ -68,6 +86,10 @@ TPW = function () {
     Handlebars.registerHelper('formatCurrency', function (number) {
       return '$' + self.jQuery.formatNumber(number.toString(), {format:"#,##0.00", locale:"us"});
     });
+  }
+  
+  var genericStyles = function () {
+    
   }
 };
 
