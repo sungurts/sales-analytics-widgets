@@ -1,7 +1,15 @@
 TPW = function () {
+<<<<<<< HEAD
+  var self = this, tpl = {};
+  
+  this.init = function () {
+    this.widgets = [];
+    this.widgetsToLoad = [];
+=======
   var self = this;
   this.init = function () {
     this.widgets = [];
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     this.widgetGroups = {};
     this.widgetCount = 0;
     (function (e, a, g, h, f, c, b, d) {
@@ -19,14 +27,43 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
+      // will run once everything is loaded
+      self.jQuery(self).bind('tpw-loaded', function () {
+         initTemplates();
+        // setup the group containers
+        self.jQuery.each(self.widgetGroups, function (index, groupInfo) {
+          self.jQuery('#' + groupInfo.container).html(tpl.groupWrapper({
+            title: tpl.groupForm({keyword: ''}),
+            content: ''
+          }));
+          self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
+            var formElements = {};
+            self.jQuery.each(self.jQuery(this).serializeArray(), function (formIndex, formElement) {
+              formElements[formElement.name] = formElement.value;
+            });
+            self.jQuery.each(self.widgetGroups[index].widgets, function (i, widget) {
+              var newConfig = widget.config;
+              newConfig.keyword = formElements.keyword;
+              newConfig.timeUnit = formElements.timeUnit;
+              widget.init(self, newConfig);
+            });
+            return false;
+          });
+        });
+        // load the widgets that are waiting to be initialized
+        self.jQuery(self.widgetsToLoad).each(function (index, widgetInfo) {
+          self.load(widgetInfo.js, widgetInfo.options);
+        });
+      });
       loadScript('libs/jshashtable-2.1.js', function () {
         loadScript('libs/jquery.numberformatter-1.2.3.min.js', function () {
-          loadScript('http://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js', function () {
+          loadScript('libs/date.min.js', function () {
             loadScript('libs/jquery.jsonp-2.3.0.min.js', function () {
-              loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
+              loadScript('libs/handlebars.min.js', function () {
                 registerHandlebarHelpers();
                 loadScript('https://www.google.com/jsapi', function () {
                   self.loaded = true;
+                  self.jQuery(self).trigger('tpw-loaded', {});
                 });
               });
             });
@@ -43,11 +80,18 @@ TPW = function () {
         if (typeof config.group !== 'undefined') {
           var newDivId = config.group + 'Widget' + self.widgetCount;
           self.widgetCount++;
+<<<<<<< HEAD
+          self.jQuery('#' + self.widgetGroups[config.group].container + ' .tpw-group-container')
+            .append('<div id="' + newDivId + '"></div>');
+          window['_' + js].init(self, {container: newDivId, displayInputs: false, formSubmitEvent: config.group + 'Event'});
+          self.widgetGroups[config.group].widgets.push(window['_' + js]);
+=======
           self.jQuery('#' + self.widgetGroups[config.group].container)
             .append('<div id="' + newDivId + '"></div>');
           window['_' + js].init(self, {container: newDivId, displayInputs: false});
           console.log('creating new div for widget... id: ' + newDivId);
           console.log('Loading widget into widget group... ' + config.group);
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
         } else if (typeof config.container !== 'undefined') {
           window['_' + js].init(self, config);
         } else {
@@ -56,12 +100,26 @@ TPW = function () {
         self.widgets.push(window['_' + js]);
       });
     } else {
-      setTimeout(function () { self.load(js, options); }, 50);
+      self.widgetsToLoad.push({js: js, options: options});
     }
   };
   
+<<<<<<< HEAD
+  this.createGroup = function (groupId, options) {
+    self.widgetGroups[groupId] = {widgets: [], container: options.container};
+//     self.jQuery('#' + self.widgetGroups[config.group].container).append(
+  }
+  
+  this.data = function (key, value) {
+    if (typeof value === 'undefined') {
+      return self.jQuery(self).data(key);
+    } else {
+      self.jQuery(self).data(key, value);
+    }
+=======
   this.createGroup = function (groupId, container) {
     self.widgetGroups[groupId] = {widgets: null, container: container};
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
   }
   
   var loadScript = function (script, callback) {
@@ -91,6 +149,33 @@ TPW = function () {
   var genericStyles = function () {
     
   }
+<<<<<<< HEAD
+  
+  var initTemplates = function () {
+    // template cannot be initialized until handlebars has loaded
+    tpl.groupWrapper = Handlebars.compile('<div class="tpw-group-container">\
+        <div class="tpw-group-title-bar">\
+          {{{title}}}\
+        </div>\
+        <div class="tpw-group-content">\
+          {{{content}}}\
+        </div>\
+        <div class="tpw-clear"></div>\
+      </div>');
+    tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
+      Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
+      Date Range:\
+      <select name="timeUnit" class="time-unit">\
+        <option value="HOUR">Last Hour</option>\
+        <option value="DAY" selected>Last Day</option>\
+        <option value="MONTH">Last 30 Days</option>\
+        <option value="YEAR">Last Year</option>\
+      </select>\
+      <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
+    </form>');
+  }
+=======
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
 };
 
 var _TPW = new TPW();

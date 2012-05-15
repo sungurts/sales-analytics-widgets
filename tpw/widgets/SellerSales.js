@@ -90,10 +90,17 @@ SellerSales = function () {
 
   tpl.form = Handlebars.compile('<form class="tpw-form">\
       {{#if invisible}}\
+<<<<<<< HEAD
+      <input type="hidden" name="keyword" value="{{keyword}}">\
+      <input type="hidden" name="timeUnit" class="time-unit" value="{{timeUnit}}">\
+      {{else}}\
+      Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
+=======
       <input type="hidden" name="keyword" value="{{keywordValue}}">\
       <input type="hidden" name="timeUnit" value="">\
       {{else}}\
       Keywords: <input type="text" name="keyword" size="15" value="{{keywordValue}}">\
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       Date Range:\
       <select name="timeUnit" class="time-unit">\
         <option value="HOUR">Last Hour</option>\
@@ -139,10 +146,17 @@ SellerSales = function () {
     this.TPW = tpw;
     this.jQuery = tpw.jQuery;
     this.config = config;
+<<<<<<< HEAD
+    this.config.widgetName = config.widgetName || 'Seller Sales';
+    this.config.formSubmitEvent = config.formSubmitEvent || 'sellerSalesEvent';
+=======
     this.config.widgetName = this.config.widgetName || 'Seller Sales';
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     this.apiKey = config.apiKey;
     this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/seller-sales';
     this.tpProxy = config.tpProxy;
+    this.keyword = config.keyword || '';
+    this.timeUnit = config.timeUnit || 'DAY';
     draw();
   };
 
@@ -155,14 +169,35 @@ SellerSales = function () {
       var displayInputs = (typeof self.config.displayInputs === 'undefined' || self.config.displayInputs === true);
       var titleBar;
       if (displayInputs) {
+<<<<<<< HEAD
+        titleBar = tpl.form({keyword: self.keyword, timeUnit: self.timeUnit});
+      } else {
+        titleBar = self.config.widgetName + tpl.form({invisible: true, keyword: self.keyword, timeUnit: self.timeUnit});
+=======
         titleBar = tpl.form({keywordValue: ''});
       } else {
         titleBar = self.config.widgetName + tpl.form({invisible: true});
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       }
       var htmlResult = tpl.wrapper({
         title: titleBar,
         inputs: displayInputs,
         content: null
+<<<<<<< HEAD
+      });
+      self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
+      
+      if (displayInputs) {
+        getForm().submit(function () {
+          self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, getForm());
+          return false;
+        });
+      }
+      self.jQuery(self.TPW).unbind(self.config.formSubmitEvent);
+      self.jQuery(self.TPW).bind(self.config.formSubmitEvent, function (eventObj, form) {
+        submitForm(form);
+=======
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       });
       self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
       
@@ -183,7 +218,11 @@ SellerSales = function () {
 
     self.jQuery(function () {
       var chartDelegate = function () {
+<<<<<<< HEAD
+        self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, getForm());
+=======
         getForm().submit();
+>>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       };
       google.load('visualization', '1.0', {'packages':['corechart'], callback:chartDelegate});
     });
