@@ -22,6 +22,11 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
+      self.jQuery("<link/>", {
+         rel: "stylesheet",
+         type: "text/css",
+         href: self.path + "css/tpw.css"
+      }).appendTo("head");
       // will run once everything is loaded
       self.jQuery(self).bind('tpw-loaded', function () {
          initTemplates();
@@ -83,7 +88,7 @@ TPW = function () {
       if (typeof config.groupId !== 'undefined') {
         var newDivId = config.groupId + 'Widget' + self.widgetCount;
         self.widgetCount++;
-        self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-container')
+        self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-content')
           .append('<div class="tpw-grouped-widget" id="' + newDivId + '"></div>');
       }
       

@@ -13,38 +13,38 @@ SalesMetrics = function () {
   .tpw-summary-bar div.tpw-message, .tpw-summary-bar div.tpw-loading { margin: 15px; }\
   .tpw-summary-bar div.tpw-loading { text-align: center; }\
   .tpw-summary-bar form { margin: 0px; padding: 0px; }\
-    .tpw-summary-bar div.tpw-title-bar-inputs, .tpw-summary-bar div.tpw-title-bar {\
-      display: block;\
-      position: relative;\
-      line-height: 35px;\
-      vertical-align: middle;\
-      padding-left: 20px;\
-      background-image: linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-      background-image: -o-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-      background-image: -moz-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-      background-image: -webkit-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-      background-image: -ms-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
-      background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.08, #D1D1D1), color-stop(0.77, #fafafa));\
-      -webkit-border-top-left-radius: 5px;\
-      -webkit-border-top-right-radius: 5px;\
-      -moz-border-radius-topleft: 5px;\
-      -moz-border-radius-topright: 5px;\
-      border-top-left-radius: 5px;\
-      border-top-right-radius: 5px;\
-    }\
-    .tpw-summary-bar div.tpw-title-bar {\
-      line-height: 20px;\
-      background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwOTNkMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwNjk5NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");\
-      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0093d0), color-stop(100%, #006997));\
-      background: -webkit-linear-gradient(#0093d0, #006997);\
-      background: -moz-linear-gradient(#0093d0, #006997);\
-      background: -o-linear-gradient(#0093d0, #006997);\
-      background: -ms-linear-gradient(#0093d0, #006997);\
-      background: linear-gradient(#0093d0, #006997);\
-      background-color: #0093d0;\
-      color: white;\
-      text-shadow: 1px 1px 1px #006997;\
-    }\
+  .tpw-summary-bar div.tpw-title-bar-inputs, .tpw-summary-bar div.tpw-title-bar {\
+    display: block;\
+    position: relative;\
+    line-height: 35px;\
+    vertical-align: middle;\
+    padding-left: 20px;\
+    background-image: linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+    background-image: -o-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+    background-image: -moz-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+    background-image: -webkit-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+    background-image: -ms-linear-gradient(bottom, #D1D1D1 8%, #fafafa 77%);\
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.08, #D1D1D1), color-stop(0.77, #fafafa));\
+    -webkit-border-top-left-radius: 5px;\
+    -webkit-border-top-right-radius: 5px;\
+    -moz-border-radius-topleft: 5px;\
+    -moz-border-radius-topright: 5px;\
+    border-top-left-radius: 5px;\
+    border-top-right-radius: 5px;\
+  }\
+  .tpw-summary-bar div.tpw-title-bar {\
+    line-height: 20px;\
+    background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwOTNkMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwNjk5NyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");\
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0093d0), color-stop(100%, #006997));\
+    background: -webkit-linear-gradient(#0093d0, #006997);\
+    background: -moz-linear-gradient(#0093d0, #006997);\
+    background: -o-linear-gradient(#0093d0, #006997);\
+    background: -ms-linear-gradient(#0093d0, #006997);\
+    background: linear-gradient(#0093d0, #006997);\
+    background-color: #0093d0;\
+    color: white;\
+    text-shadow: 1px 1px 1px #006997;\
+  }\
   .tpw-summary-bar div.tpw-content { display: block; position: relative; }\
   .tpw-summary-bar div.tpw-values {\
     position: relative;\
