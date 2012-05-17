@@ -29,12 +29,11 @@ TPW = function () {
         self.jQuery.each(self.widgetGroups, function (index, groupInfo) {
           self.jQuery(self).bind(groupInfo.groupId + 'WidgetInitDone', function (data) {
             self.reInitCount++;
-            console.log('++' + self.reInitCount);
             if (self.reInitCount >= self.widgetGroups[groupInfo.groupId].widgets.length) {
-              console.log('reinit done...');
+              self.jQuery('#' + groupInfo.container + ' .tpw-group-form .tpw-submit').removeAttr('disabled');
             }
           });
-          self.jQuery('#' + groupInfo.container).html(tpl.groupWrapper({
+          self.jQuery('#' + groupInfo.container).html(tpl.styles + tpl.groupWrapper({
             title: tpl.groupForm({keyword: ''}),
             content: ''
           }));
@@ -51,7 +50,6 @@ TPW = function () {
               newConfig.timeUnit = formElements.timeUnit;
               widget.init(self, newConfig);
             });
-            self.jQuery(this).find('.tpw-submit').removeAttr('disabled');
             return false;
           });
         });
@@ -81,12 +79,16 @@ TPW = function () {
   this.load = function (js, options) {
     if (this.loaded) {
       var config = options || {};
+      
+      if (typeof config.groupId !== 'undefined') {
+        var newDivId = config.groupId + 'Widget' + self.widgetCount;
+        self.widgetCount++;
+        self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-container')
+          .append('<div class="tpw-grouped-widget" id="' + newDivId + '"></div>');
+      }
+      
       loadScript('widgets/' + js + '.js', function () {
         if (typeof config.groupId !== 'undefined') {
-          var newDivId = config.groupId + 'Widget' + self.widgetCount;
-          self.widgetCount++;
-          self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-container')
-            .append('<div id="' + newDivId + '"></div>');
           window['_' + js].init(self, {container: newDivId, displayInputs: false, formSubmitEvent: config.groupId + 'FormSubmit', initCompleteEvent: config.groupId + 'WidgetInitDone'});
           self.widgetGroups[config.groupId].widgets.push(window['_' + js]);
         } else if (typeof config.container !== 'undefined') {
@@ -161,6 +163,13 @@ TPW = function () {
       </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
+    tpl.styles = '<style type="text/css">\
+    .tpw-grouped-widget {\
+      margin: 5px;\
+      float: left;\
+      display: inline-block;\
+    }\
+    </style>';
   }
 };
 

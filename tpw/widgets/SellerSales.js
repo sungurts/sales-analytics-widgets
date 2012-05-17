@@ -149,8 +149,6 @@ SellerSales = function () {
     this.keyword = config.keyword || '';
     this.timeUnit = config.timeUnit || 'DAY';
     draw();
-    console.log(this.jQuery(tpw));
-    this.jQuery(tpw).trigger(this.config.initCompleteEvent, {key: 'value'});
   };
 
   /* ---------------------------------------------------------------------------------------------------------------*/
@@ -190,10 +188,6 @@ SellerSales = function () {
           submitForm(this);
           return false;
         });
-      } else {
-        self.jQuery('#' + self.config.container).bind(self.config.formSubmitEvent, function() {
-          console.log('event fired!');
-        });
       }
     } else {
       // container doesn't seem to exist...?
@@ -232,6 +226,7 @@ SellerSales = function () {
           setContent(tpl.error);
         }
         enableSubmitButton();
+        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent, {key: 'value'});
       },
       success: function (data, textStatus) {
         if (data.results.length) {

@@ -95,6 +95,7 @@ SalesMetrics = function () {
     this.config = config;
     this.config.widgetName = this.config.widgetName || 'Sales Metrics';
     this.config.formSubmitEvent = config.formSubmitEvent || 'salesMetricsEvent';
+    this.config.initCompleteEvent = config.initCompleteEvent || 'sellerSalesWidgetInitDone';
     this.apiKey = config.apiKey;
     this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
     this.tpProxy = config.tpProxy;
@@ -173,6 +174,7 @@ SalesMetrics = function () {
           setContent(tpl.error);
         }
         enableSubmitButton();
+        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent, {key: 'value'});
       },
       success: function (data, textStatus) {
         if (data.results.length) {
