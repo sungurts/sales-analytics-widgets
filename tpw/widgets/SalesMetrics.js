@@ -64,7 +64,6 @@ SalesMetrics = function () {
     <div class="tpw-content">{{{content}}}</div>\
   <div class="tpw-clear"></div></div>');
   tpl.form = Handlebars.compile('<form class="tpw-form">\
-<<<<<<< HEAD
     {{#if invisible}}\
       <input type="hidden" name="keyword" value="{{keyword}}">\
       <input type="hidden" name="timeUnit" class="time-unit" value="{{timeUnit}}">\
@@ -80,18 +79,6 @@ SalesMetrics = function () {
       </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     {{/if}}\
-=======
-    Product: <input type="text" name="keyword" size="15" value="{{keywordValue}}">\
-    Date Range: \
-    <select name="dateOffset">\
-      <option value="1">1 Day</option>\
-      <option value="7">7 Days</option>\
-      <option value="30">30 Days</option>\
-      <option value="60">60 Days</option>\
-      <option value="90">90 Days</option>\
-    </select>\
-    <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     </form>');
   tpl.start = '<div class="tpw-message">Enter a search above...</div>';
   tpl.loading = '<div class="tpw-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
@@ -107,10 +94,7 @@ SalesMetrics = function () {
     this.jQuery = jQuery;
     this.config = config;
     this.config.widgetName = this.config.widgetName || 'Sales Metrics';
-<<<<<<< HEAD
     this.config.formSubmitEvent = config.formSubmitEvent || 'salesMetricsEvent';
-=======
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     this.apiKey = config.apiKey;
     this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
     this.tpProxy = config.tpProxy;
@@ -125,15 +109,9 @@ SalesMetrics = function () {
       var displayInputs = (typeof self.config.displayInputs === 'undefined' || self.config.displayInputs === true);
       var titleBar;
       if (displayInputs) {
-<<<<<<< HEAD
         titleBar = tpl.form({keyword: self.keyword, timeUnit: self.timeUnit});
       } else {
         titleBar = self.config.widgetName + tpl.form({invisible: true, keyword: self.keyword, timeUnit: self.timeUnit});
-=======
-        titleBar = tpl.form({keywordValue: ''});
-      } else {
-        titleBar = self.config.widgetName;
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       }
       var htmlResult = tpl.wrapper({
         title: titleBar,
@@ -141,7 +119,6 @@ SalesMetrics = function () {
         content: tpl.start
       });
       self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
-<<<<<<< HEAD
       
       self.jQuery(self.TPW).unbind(self.config.formSubmitEvent);
       self.jQuery(self.TPW).bind(self.config.formSubmitEvent, function (eventObj, form) {
@@ -155,12 +132,6 @@ SalesMetrics = function () {
       } else {
         self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, getForm());
       }
-=======
-      self.jQuery('#' + self.config.container + ' .tpw-form').submit(function () {
-        submitForm(this);
-        return false;
-      });
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     } else {
       // container doesn't seem to exist...?
     }
@@ -193,19 +164,15 @@ SalesMetrics = function () {
     });
     self.jQuery.jsonp({
       beforeSend: function () {
-<<<<<<< HEAD
-        console.log('sending sales metrics');
-=======
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
         setContent(tpl.loading);
-        self.jQuery('#tpw-submit').attr('disabled', 'disabled');
+        disableSubmitButton();
       },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
         if (textStatus !== 'success') {
           setContent(tpl.error);
         }
-        self.jQuery('#tpw-submit').removeAttr('disabled');
+        enableSubmitButton();
       },
       success: function (data, textStatus) {
         if (data.results.length) {
@@ -219,15 +186,19 @@ SalesMetrics = function () {
   
   var setContent = function (content) {
     self.jQuery('#' + self.config.container + ' .tpw-content').html(content);
-<<<<<<< HEAD
   };
   
   var getForm = function () {
     return jQuery('#' + self.config.container + ' .tpw-form');
   };
-=======
-  }
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
+  
+  var disableSubmitButton = function () {
+    self.jQuery('#' + self.config.container + ' .tpw-submit').attr('disabled', 'disabled');
+  };
+  
+  var enableSubmitButton = function () {
+    self.jQuery('#' + self.config.container + ' .tpw-submit').removeAttr('disabled');
+  };
 };
 
 var _SalesMetrics = new SalesMetrics();

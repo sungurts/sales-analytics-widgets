@@ -1,17 +1,12 @@
 TPW = function () {
-<<<<<<< HEAD
   var self = this, tpl = {};
   
   this.init = function () {
     this.widgets = [];
     this.widgetsToLoad = [];
-=======
-  var self = this;
-  this.init = function () {
-    this.widgets = [];
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
     this.widgetGroups = {};
     this.widgetCount = 0;
+    this.reInitCount = 0;
     (function (e, a, g, h, f, c, b, d) {
         if (!(f = e.jQuery) || g > f.fn.jquery || h(f)) {
             c = a.createElement("script");
@@ -32,11 +27,20 @@ TPW = function () {
          initTemplates();
         // setup the group containers
         self.jQuery.each(self.widgetGroups, function (index, groupInfo) {
+          self.jQuery(self).bind(groupInfo.groupId + 'WidgetInitDone', function (data) {
+            self.reInitCount++;
+            console.log('++' + self.reInitCount);
+            if (self.reInitCount >= self.widgetGroups[groupInfo.groupId].widgets.length) {
+              console.log('reinit done...');
+            }
+          });
           self.jQuery('#' + groupInfo.container).html(tpl.groupWrapper({
             title: tpl.groupForm({keyword: ''}),
             content: ''
           }));
           self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
+            self.reInitCount = 0;
+            self.jQuery(this).find('.tpw-submit').attr('disabled', 'disabled');
             var formElements = {};
             self.jQuery.each(self.jQuery(this).serializeArray(), function (formIndex, formElement) {
               formElements[formElement.name] = formElement.value;
@@ -47,6 +51,7 @@ TPW = function () {
               newConfig.timeUnit = formElements.timeUnit;
               widget.init(self, newConfig);
             });
+            self.jQuery(this).find('.tpw-submit').removeAttr('disabled');
             return false;
           });
         });
@@ -77,21 +82,13 @@ TPW = function () {
     if (this.loaded) {
       var config = options || {};
       loadScript('widgets/' + js + '.js', function () {
-        if (typeof config.group !== 'undefined') {
-          var newDivId = config.group + 'Widget' + self.widgetCount;
+        if (typeof config.groupId !== 'undefined') {
+          var newDivId = config.groupId + 'Widget' + self.widgetCount;
           self.widgetCount++;
-<<<<<<< HEAD
-          self.jQuery('#' + self.widgetGroups[config.group].container + ' .tpw-group-container')
+          self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-container')
             .append('<div id="' + newDivId + '"></div>');
-          window['_' + js].init(self, {container: newDivId, displayInputs: false, formSubmitEvent: config.group + 'Event'});
-          self.widgetGroups[config.group].widgets.push(window['_' + js]);
-=======
-          self.jQuery('#' + self.widgetGroups[config.group].container)
-            .append('<div id="' + newDivId + '"></div>');
-          window['_' + js].init(self, {container: newDivId, displayInputs: false});
-          console.log('creating new div for widget... id: ' + newDivId);
-          console.log('Loading widget into widget group... ' + config.group);
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
+          window['_' + js].init(self, {container: newDivId, displayInputs: false, formSubmitEvent: config.groupId + 'FormSubmit', initCompleteEvent: config.groupId + 'WidgetInitDone'});
+          self.widgetGroups[config.groupId].widgets.push(window['_' + js]);
         } else if (typeof config.container !== 'undefined') {
           window['_' + js].init(self, config);
         } else {
@@ -104,10 +101,8 @@ TPW = function () {
     }
   };
   
-<<<<<<< HEAD
   this.createGroup = function (groupId, options) {
-    self.widgetGroups[groupId] = {widgets: [], container: options.container};
-//     self.jQuery('#' + self.widgetGroups[config.group].container).append(
+    self.widgetGroups[groupId] = {groupId: groupId, container: options.container, widgets: []};
   }
   
   this.data = function (key, value) {
@@ -116,10 +111,6 @@ TPW = function () {
     } else {
       self.jQuery(self).data(key, value);
     }
-=======
-  this.createGroup = function (groupId, container) {
-    self.widgetGroups[groupId] = {widgets: null, container: container};
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
   }
   
   var loadScript = function (script, callback) {
@@ -146,10 +137,7 @@ TPW = function () {
     });
   }
   
-  var genericStyles = function () {
-    
-  }
-<<<<<<< HEAD
+  
   
   var initTemplates = function () {
     // template cannot be initialized until handlebars has loaded
@@ -174,8 +162,6 @@ TPW = function () {
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
   }
-=======
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
 };
 
 var _TPW = new TPW();

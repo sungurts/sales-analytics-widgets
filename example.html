@@ -29,13 +29,9 @@
     _TPW.load('SalesMetrics', {container: 'containerSalesMetrics'});
     _TPW.load('SellerSales', {container: 'containerSellerSales'});
     
-<<<<<<< HEAD
     _TPW.createGroup('SalesGroup', {container: 'tpw-group-container-id'});
-=======
-    _TPW.createGroup('SalesGroup', 'tpw-group-container');
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
-    _TPW.load('SalesMetrics', {group: 'SalesGroup'});
-    _TPW.load('SellerSales', {group: 'SalesGroup'});
+    _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
+    _TPW.load('SellerSales', {groupId: 'SalesGroup'});
     $(function () {
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
@@ -67,11 +63,7 @@
         <div id="containerSellerSales"></div>
         
         <h4>Grouped Widgets</h4>
-<<<<<<< HEAD
         <div id="tpw-group-container-id"></div>
-=======
-        <div id="tpw-group-container"></div>
->>>>>>> 998949ef9ac869acc05e1a8f5126c7ef1e85ffea
       </div>
     </body>
 </html>
