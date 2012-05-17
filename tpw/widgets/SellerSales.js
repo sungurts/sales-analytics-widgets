@@ -226,7 +226,7 @@ SellerSales = function () {
           setContent(tpl.error);
         }
         enableSubmitButton();
-        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent, {key: 'value'});
+        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent);
       },
       success: function (data, textStatus) {
         if (data.results.length) {

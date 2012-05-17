@@ -59,6 +59,7 @@ SalesMetrics = function () {
 </style>';
   tpl.noResults = '<div class="tpw-message">No results.</div>';
   tpl.error = '<div class="tpw-message">An unexpected error has occurred.</div>';
+  tpl.timeout = '<div class="tpw-message">The request has timed out.</div>';
   tpl.wrapper = Handlebars.compile('<div class="tpw-summary-bar">\
     <div class="tpw-title-bar{{#if inputs}}-inputs{{/if}}">{{{title}}}</div>\
     <div class="tpw-content">{{{content}}}</div>\
@@ -66,16 +67,16 @@ SalesMetrics = function () {
   tpl.form = Handlebars.compile('<form class="tpw-form">\
     {{#if invisible}}\
       <input type="hidden" name="keyword" value="{{keyword}}">\
-      <input type="hidden" name="timeUnit" class="time-unit" value="{{timeUnit}}">\
+      <input type="hidden" name="dateOffset" class="dateOffset" value="{{dateOffset}}">\
     {{else}}\
       Product: <input type="text" name="keyword" size="15" value="{{keyword}}">\
       Date Range: \
       <select name="dateOffset">\
-        <option value="1">1 Day</option>\
-        <option value="7">7 Days</option>\
-        <option value="30">30 Days</option>\
-        <option value="60">60 Days</option>\
-        <option value="90">90 Days</option>\
+        <option value="1">Last Day</option>\
+        <option value="7">Last 7 Days</option>\
+        <option value="30">Last 30 Days</option>\
+        <option value="60">Last 60 Days</option>\
+        <option value="90">Last 90 Days</option>\
       </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     {{/if}}\
@@ -100,7 +101,7 @@ SalesMetrics = function () {
     this.endpoint = config.endpoint || 'http://terapeak.api.mashery.com/v1/sales-metrics';
     this.tpProxy = config.tpProxy;
     this.keyword = config.keyword || '';
-    this.timeUnit = config.timeUnit || 'DAY';
+    this.dateOffset = config.dateOffset || 7;
     draw();
   };
   
@@ -110,9 +111,9 @@ SalesMetrics = function () {
       var displayInputs = (typeof self.config.displayInputs === 'undefined' || self.config.displayInputs === true);
       var titleBar;
       if (displayInputs) {
-        titleBar = tpl.form({keyword: self.keyword, timeUnit: self.timeUnit});
+        titleBar = tpl.form({keyword: self.keyword, dateOffset: self.dateOffset});
       } else {
-        titleBar = self.config.widgetName + tpl.form({invisible: true, keyword: self.keyword, timeUnit: self.timeUnit});
+        titleBar = self.config.widgetName + tpl.form({invisible: true, keyword: self.keyword, dateOffset: self.dateOffset});
       }
       var htmlResult = tpl.wrapper({
         title: titleBar,
@@ -170,11 +171,13 @@ SalesMetrics = function () {
       },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
       complete: function (xOptions, textStatus) {
-        if (textStatus !== 'success') {
+        if (textStatus == 'error') {
           setContent(tpl.error);
+        } else if (textStatus == 'timeout') {
+          setContent(tpl.timeout);
         }
         enableSubmitButton();
-        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent, {key: 'value'});
+        self.jQuery(self.TPW).trigger(self.config.initCompleteEvent);
       },
       success: function (data, textStatus) {
         if (data.results.length) {

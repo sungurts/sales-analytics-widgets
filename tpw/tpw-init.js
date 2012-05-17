@@ -47,7 +47,7 @@ TPW = function () {
             self.jQuery.each(self.widgetGroups[index].widgets, function (i, widget) {
               var newConfig = widget.config;
               newConfig.keyword = formElements.keyword;
-              newConfig.timeUnit = formElements.timeUnit;
+              newConfig.dateOffset = formElements.dateOffset;
               widget.init(self, newConfig);
             });
             return false;
@@ -155,11 +155,11 @@ TPW = function () {
     tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
       Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
       Date Range:\
-      <select name="timeUnit" class="time-unit">\
-        <option value="HOUR">Last Hour</option>\
-        <option value="DAY" selected>Last Day</option>\
-        <option value="MONTH">Last 30 Days</option>\
-        <option value="YEAR">Last Year</option>\
+      <select name="dateOffset" class="dateOffset">\
+        <option value="1">Last Day</option>\
+        <option value="7" selected>Last 7 Days</option>\
+        <option value="30">Last 30 Days</option>\
+        <option value="365">Last Year</option>\
       </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');

@@ -32,7 +32,7 @@
     
     _TPW.createGroup('SalesGroup', {container: 'tpw-group-container-id'});
     _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
-    _TPW.load('SellerSales', {groupId: 'SalesGroup'});
+    _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
     $(function () {
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
