@@ -20,22 +20,26 @@
     .widget-container h4 { margin: 50px 0px; border-bottom: 1px solid #ccc; }
     label { width: 90px; display: inline-block; text-align: right; }
     blockquote { color: #bbb; font-size: .7em; }
+    #tpw-group-container-id { min-height: 300px; }
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     
     <script type="text/javascript" src="tpw/tpw-init.js"></script>
     <script type="text/javascript">
     _TPW.init();
     _TPW.load('SalesMetrics', {container: 'containerSalesMetrics'});
     _TPW.load('SellerSales', {container: 'containerSellerSales'});
+    
+    _TPW.createGroup('SalesGroup', {container: 'tpw-group-container-id'});
+    _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
+    _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
     $(function () {
       $('#widget-config-form').submit(function () {
         $.each(_TPW.widgets, function (i, e) {
           e.config.tpProxy = $('#seller-id').val();
           e.config.apiKey = $('#api-key').val();
           e.init(e.TPW, e.config);
-        });
+        }); 
         return false;
       });
     });
@@ -58,6 +62,9 @@
         </div>
         <h4>Seller Sales Widget</h4>
         <div id="containerSellerSales"></div>
+        
+        <h4>Grouped Widgets</h4>
+        <div id="tpw-group-container-id"></div>
       </div>
     </body>
 </html>

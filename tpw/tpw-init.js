@@ -1,7 +1,12 @@
 TPW = function () {
-  var self = this, path;
+  var self = this, tpl = {};
+  
   this.init = function () {
     this.widgets = [];
+    this.widgetsToLoad = [];
+    this.widgetGroups = {};
+    this.widgetCount = 0;
+    this.reInitCount = 0;
     (function (e, a, g, h, f, c, b, d) {
         if (!(f = e.jQuery) || g > f.fn.jquery || h(f)) {
             c = a.createElement("script");
@@ -17,13 +22,57 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
+      self.jQuery("<link/>", {
+         rel: "stylesheet",
+         type: "text/css",
+         href: self.path + "css/tpw.css"
+      }).appendTo("head");
+      // will run once everything is loaded
+      self.jQuery(self).bind('tpw-loaded', function () {
+         initTemplates();
+        // setup the group containers
+        self.jQuery.each(self.widgetGroups, function (index, groupInfo) {
+          self.jQuery(self).bind(groupInfo.groupId + 'WidgetInitDone', function (data) {
+            self.reInitCount++;
+            if (self.reInitCount >= self.widgetGroups[groupInfo.groupId].widgets.length) {
+              self.jQuery('#' + groupInfo.container + ' .tpw-group-form .tpw-submit').removeAttr('disabled');
+            }
+          });
+          self.jQuery('#' + groupInfo.container).html(tpl.styles + tpl.groupWrapper({
+            title: tpl.groupForm({keyword: ''}),
+            content: ''
+          }));
+          self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
+            self.reInitCount = 0;
+            self.jQuery(this).find('.tpw-submit').attr('disabled', 'disabled');
+            var formElements = {};
+            self.jQuery.each(self.jQuery(this).serializeArray(), function (formIndex, formElement) {
+              formElements[formElement.name] = formElement.value;
+            });
+            self.jQuery.each(self.widgetGroups[index].widgets, function (i, widget) {
+              var newConfig = widget.config;
+              newConfig.keyword = formElements.keyword;
+              newConfig.dateOffset = formElements.dateOffset;
+              widget.init(self, newConfig);
+            });
+            return false;
+          });
+        });
+        // load the widgets that are waiting to be initialized
+        self.jQuery(self.widgetsToLoad).each(function (index, widgetInfo) {
+          self.load(widgetInfo.js, widgetInfo.options);
+        });
+      });
       loadScript('libs/jshashtable-2.1.js', function () {
         loadScript('libs/jquery.numberformatter-1.2.3.min.js', function () {
-          loadScript('http://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js', function () {
+          loadScript('libs/date.min.js', function () {
             loadScript('libs/jquery.jsonp-2.3.0.min.js', function () {
-              loadScript('http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js', function () {
+              loadScript('libs/handlebars.min.js', function () {
                 registerHandlebarHelpers();
-                self.loaded = true;
+                loadScript('https://www.google.com/jsapi', function () {
+                  self.loaded = true;
+                  self.jQuery(self).trigger('tpw-loaded', {});
+                });
               });
             });
           });
@@ -35,14 +84,41 @@ TPW = function () {
   this.load = function (js, options) {
     if (this.loaded) {
       var config = options || {};
+      
+      if (typeof config.groupId !== 'undefined') {
+        var newDivId = config.groupId + 'Widget' + self.widgetCount;
+        self.widgetCount++;
+        self.jQuery('#' + self.widgetGroups[config.groupId].container + ' .tpw-group-content')
+          .append('<div class="tpw-grouped-widget" id="' + newDivId + '"></div>');
+      }
+      
       loadScript('widgets/' + js + '.js', function () {
-        window['_' + js].init(self, config);
+        if (typeof config.groupId !== 'undefined') {
+          window['_' + js].init(self, {container: newDivId, displayInputs: false, formSubmitEvent: config.groupId + 'FormSubmit', initCompleteEvent: config.groupId + 'WidgetInitDone'});
+          self.widgetGroups[config.groupId].widgets.push(window['_' + js]);
+        } else if (typeof config.container !== 'undefined') {
+          window['_' + js].init(self, config);
+        } else {
+          throw 'No container or widget group provided.';
+        }
         self.widgets.push(window['_' + js]);
       });
     } else {
-      setTimeout(function () { self.load(js, options); }, 50);
+      self.widgetsToLoad.push({js: js, options: options});
     }
   };
+  
+  this.createGroup = function (groupId, options) {
+    self.widgetGroups[groupId] = {groupId: groupId, container: options.container, widgets: []};
+  }
+  
+  this.data = function (key, value) {
+    if (typeof value === 'undefined') {
+      return self.jQuery(self).data(key);
+    } else {
+      self.jQuery(self).data(key, value);
+    }
+  }
   
   var loadScript = function (script, callback) {
     var c = document.createElement("script");
@@ -66,6 +142,39 @@ TPW = function () {
     Handlebars.registerHelper('formatCurrency', function (number) {
       return '$' + self.jQuery.formatNumber(number.toString(), {format:"#,##0.00", locale:"us"});
     });
+  }
+  
+  
+  
+  var initTemplates = function () {
+    // template cannot be initialized until handlebars has loaded
+    tpl.groupWrapper = Handlebars.compile('<div class="tpw-group-container">\
+        <div class="tpw-group-title-bar">\
+          {{{title}}}\
+        </div>\
+        <div class="tpw-group-content">\
+          {{{content}}}\
+        </div>\
+        <div class="tpw-clear"></div>\
+      </div>');
+    tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
+      Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
+      Date Range:\
+      <select name="dateOffset" class="dateOffset">\
+        <option value="1">Last Day</option>\
+        <option value="7" selected>Last 7 Days</option>\
+        <option value="30">Last 30 Days</option>\
+        <option value="365">Last Year</option>\
+      </select>\
+      <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
+    </form>');
+    tpl.styles = '<style type="text/css">\
+    .tpw-grouped-widget {\
+      margin: 5px;\
+      float: left;\
+      display: inline-block;\
+    }\
+    </style>';
   }
 };
 
