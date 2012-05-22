@@ -22,11 +22,8 @@ TPW = function () {
         }
     }(window, document, "1.7.2", function ($, L) {
       self.jQuery = $;
-      self.jQuery("<link/>", {
-         rel: "stylesheet",
-         type: "text/css",
-         href: self.path + "css/tpw.css"
-      }).appendTo("head");
+      loadCss('css/jquery-ui-1.8.20.custom.css');
+      loadCss('css/tpw.css');
       // will run once everything is loaded
       self.jQuery(self).bind('tpw-loaded', function () {
          initTemplates();
@@ -39,9 +36,13 @@ TPW = function () {
             }
           });
           self.jQuery('#' + groupInfo.container).html(tpl.styles + tpl.groupWrapper({
-            title: tpl.groupForm({keyword: ''}),
+            title: tpl.groupForm({keyword: '', containerId: groupInfo.container}),
             content: ''
           }));
+          self.jQuery('#' + groupInfo.container + ' input[name="dateOffset"]').change(function (event) {
+            self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit();
+          });
+          self.jQuery('#' + groupInfo.container + ' .tpw-btn-group').buttonset();
           self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
             self.reInitCount = 0;
             self.jQuery(this).find('.tpw-submit').attr('disabled', 'disabled');
@@ -63,15 +64,17 @@ TPW = function () {
           self.load(widgetInfo.js, widgetInfo.options);
         });
       });
-      loadScript('libs/jshashtable-2.1.js', function () {
-        loadScript('libs/jquery.numberformatter-1.2.3.min.js', function () {
-          loadScript('libs/date.min.js', function () {
-            loadScript('libs/jquery.jsonp-2.3.0.min.js', function () {
-              loadScript('libs/handlebars.min.js', function () {
-                registerHandlebarHelpers();
-                loadScript('https://www.google.com/jsapi', function () {
-                  self.loaded = true;
-                  self.jQuery(self).trigger('tpw-loaded', {});
+      loadScript('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js', function () {
+        loadScript('libs/jshashtable-2.1.js', function () {
+          loadScript('libs/jquery.numberformatter-1.2.3.min.js', function () {
+            loadScript('libs/date.min.js', function () {
+              loadScript('libs/jquery.jsonp-2.3.0.min.js', function () {
+                loadScript('libs/handlebars.min.js', function () {
+                  registerHandlebarHelpers();
+                  loadScript('https://www.google.com/jsapi', function () {
+                    self.loaded = true;
+                    self.jQuery(self).trigger('tpw-loaded', {});
+                  });
                 });
               });
             });
@@ -138,6 +141,14 @@ TPW = function () {
     document.getElementsByTagName('head')[0].appendChild(c);
   }
   
+  var loadCss = function (css) {
+    self.jQuery("<link/>", {
+       rel: "stylesheet",
+       type: "text/css",
+       href: self.path + css
+    }).appendTo("head");
+  }
+  
   var registerHandlebarHelpers = function () {
     Handlebars.registerHelper('formatCurrency', function (number) {
       return '$' + self.jQuery.formatNumber(number.toString(), {format:"#,##0.00", locale:"us"});
@@ -159,13 +170,12 @@ TPW = function () {
       </div>');
     tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
       Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
-      Date Range:\
-      <select name="dateOffset" class="dateOffset">\
-        <option value="1">Last Day</option>\
-        <option value="7" selected>Last 7 Days</option>\
-        <option value="30">Last 30 Days</option>\
-        <option value="365">Last Year</option>\
-      </select>\
+      <div class="tpw-btn-group" data-toggle="buttons-radio" style="float: right;">\
+        <input type="radio" name="dateOffset" id="{{containerId}}1" value="1"><label for="{{containerId}}1">1 Day</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}7" value="7" checked="checked"><label for="{{containerId}}7">7 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}30" value="30"><label for="{{containerId}}30">30 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}365" value="365"><label for="{{containerId}}365">365 Days</label>\
+      </div>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
     tpl.styles = '<style type="text/css">\

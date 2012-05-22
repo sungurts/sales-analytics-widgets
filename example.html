@@ -18,7 +18,7 @@
       margin-right: auto;
     }
     .widget-container h4 { margin: 50px 0px; border-bottom: 1px solid #ccc; }
-    label { width: 90px; display: inline-block; text-align: right; }
+    .widget-config label { width: 90px; display: inline-block; text-align: right; }
     blockquote { color: #bbb; font-size: .7em; }
     #tpw-group-container-id { min-height: 300px; }
     </style>
@@ -31,7 +31,6 @@
     _TPW.load('SellerSales', {container: 'containerSellerSales'});
     
     _TPW.createGroup('SalesGroup', {container: 'tpw-group-container-id'});
-    _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
     _TPW.load('SalesMetrics', {groupId: 'SalesGroup'});
     $(function () {
       $('#widget-config-form').submit(function () {

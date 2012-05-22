@@ -57,3 +57,7 @@
 }
 .tpw-summary-bar .tpw-clear { display: block; clear: both; }
 .tpw-summary-bar div.tpw-values div { text-align: center; position: relative; float: left; margin: 10px; }
+.tpw-btn-group {
+  font-size: 9px;
+  text-transform: uppercase;
+}
