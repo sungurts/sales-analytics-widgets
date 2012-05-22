@@ -72,11 +72,10 @@ SalesMetrics = function () {
       Product: <input type="text" name="keyword" size="15" value="{{keyword}}">\
       Date Range: \
       <select name="dateOffset">\
-        <option value="1">Last Day</option>\
-        <option value="7">Last 7 Days</option>\
-        <option value="30">Last 30 Days</option>\
-        <option value="60">Last 60 Days</option>\
-        <option value="90">Last 90 Days</option>\
+        <option value="1">1 Day</option>\
+        <option value="7">7 Days</option>\
+        <option value="30">30 Days</option>\
+        <option value="365">365 Days</option>\
       </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     {{/if}}\
@@ -123,17 +122,14 @@ SalesMetrics = function () {
       self.jQuery('#' + self.config.container).html(tpl.styles + htmlResult);
       
       self.jQuery(self.TPW).unbind(self.config.formSubmitEvent);
-      self.jQuery(self.TPW).bind(self.config.formSubmitEvent, function (eventObj, form) {
-        submitForm(form);
+      self.jQuery(self.TPW).bind(self.config.formSubmitEvent, function (eventObj, formData) {
+        submitForm(formData);
+        return false;
       });
-      if (displayInputs) {
-        getForm().submit(function () {
-          self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, getForm());
-          return false;
-        });
-      } else {
-        self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, getForm());
-      }
+      getForm().submit(function () {
+        self.jQuery(self.TPW).trigger(self.config.formSubmitEvent, self.TPW.serializeToJson(getForm().serializeArray()));
+        return false;
+      });
     } else {
       // container doesn't seem to exist...?
     }
@@ -150,18 +146,17 @@ SalesMetrics = function () {
     setContent(summaryBar);
   };
   
-  var submitForm = function (formObj) {
-    var formData = self.jQuery(formObj).serializeArray();
+  var submitForm = function (dataMap) {
     var formDataString = '';
-    self.jQuery.each(formData, function (i, e) {
-      if (typeof e.name !== 'undefined' && e.name == 'keyword' && e.value.indexOf(' ') > -1) {
-        e.value = self.jQuery.trim(e.value);
-        var keywordSplit = e.value.split(' ');
+    self.jQuery.each(dataMap, function (k, v) {
+      if (typeof k !== 'undefined' && k == 'keyword' && v.indexOf(' ') > -1) {
+        v = self.jQuery.trim(v);
+        var keywordSplit = v.split(' ');
         self.jQuery.each(keywordSplit, function(keywordIndex, subValue) {
-          formDataString += '&' + e.name + '=' + subValue;
+          formDataString += '&' + k + '=' + subValue;
         });
       } else {
-        formDataString += '&' + e.name + '=' + e.value;
+        formDataString += '&' + k + '=' + v;
       }
     });
     self.jQuery.jsonp({
