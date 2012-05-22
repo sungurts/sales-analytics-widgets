@@ -36,10 +36,12 @@ TPW = function () {
             }
           });
           self.jQuery('#' + groupInfo.container).html(tpl.styles + tpl.groupWrapper({
-            title: tpl.groupForm({keyword: ''}),
+            title: tpl.groupForm({keyword: '', containerId: groupInfo.container}),
             content: ''
           }));
-          console.log(self.jQuery('#' + groupInfo.container + ' .tpw-btn-group'));
+          self.jQuery('#' + groupInfo.container + ' input[name="dateOffset"]').change(function (event) {
+            self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit();
+          });
           self.jQuery('#' + groupInfo.container + ' .tpw-btn-group').buttonset();
           self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
             self.reInitCount = 0;
@@ -168,19 +170,12 @@ TPW = function () {
       </div>');
     tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
       Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
-      Date Range:\
       <div class="tpw-btn-group" data-toggle="buttons-radio" style="float: right;">\
-        <input type="radio" name="dateOffset" id="1" value="1"><label for="1">1 Day</label>\
-        <input type="radio" name="dateOffset" id="7" value="7" checked="checked"><label for="7">7 Days</label>\
-        <input type="radio" name="dateOffset" id="30" value="30"><label for="30">30 Days</label>\
-        <input type="radio" name="dateOffset" id="365" value="365"><label for="365">365 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}1" value="1"><label for="{{containerId}}1">1 Day</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}7" value="7" checked="checked"><label for="{{containerId}}7">7 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}30" value="30"><label for="{{containerId}}30">30 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}365" value="365"><label for="{{containerId}}365">365 Days</label>\
       </div>\
-      <select name="dateOffset" class="dateOffset">\
-        <option value="1">Last Day</option>\
-        <option value="7" selected>Last 7 Days</option>\
-        <option value="30">Last 30 Days</option>\
-        <option value="365">Last Year</option>\
-      </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
     tpl.styles = '<style type="text/css">\
