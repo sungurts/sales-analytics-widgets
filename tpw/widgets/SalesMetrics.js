@@ -82,7 +82,7 @@ SalesMetrics = function () {
     {{/if}}\
     </form>');
   tpl.start = '<div class="tpw-message">Enter a search above...</div>';
-  tpl.loading = '<div class="tpw-loading"><img src="tpw/ajax-loader.gif" border="0"></div>';
+  tpl.loading = Handlebars.compile('<div class="tpw-loading"><img src="{{path}}ajax-loader.gif" border="0"></div>');
   tpl.summaryBar = Handlebars.compile('<div class="tpw-values">\
     <div><strong>Total Sales</strong><br>{{formatCurrency totalSalesUSD}}</div>\
     <div><strong>Avg. Price</strong><br>{{formatCurrency averagePriceOfItems}}</div>\
@@ -167,7 +167,7 @@ SalesMetrics = function () {
     self.jQuery.jsonp({
       cache: true,
       beforeSend: function () {
-        setContent(tpl.loading);
+        setContent(tpl.loading({path: self.TPW.path}));
         disableSubmitButton();
       },
       url: self.endpoint + '?callback=?&Terapeak-Proxy=' + self.tpProxy + '&api_key=' + self.apiKey + formDataString,
