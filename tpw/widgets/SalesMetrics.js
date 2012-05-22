@@ -165,6 +165,7 @@ SalesMetrics = function () {
       }
     });
     self.jQuery.jsonp({
+      cache: true,
       beforeSend: function () {
         setContent(tpl.loading);
         disableSubmitButton();
