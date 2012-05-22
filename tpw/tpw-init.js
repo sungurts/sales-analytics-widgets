@@ -171,8 +171,8 @@ TPW = function () {
     tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
       Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
       <div class="tpw-btn-group" data-toggle="buttons-radio" style="float: right;">\
-        <input type="radio" name="dateOffset" id="{{containerId}}1" value="1"><label for="{{containerId}}1">1 Day</label>\
-        <input type="radio" name="dateOffset" id="{{containerId}}7" value="7" checked="checked"><label for="{{containerId}}7">7 Days</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}1" value="1" checked="checked"><label for="{{containerId}}1">1 Day</label>\
+        <input type="radio" name="dateOffset" id="{{containerId}}7" value="7"><label for="{{containerId}}7">7 Days</label>\
         <input type="radio" name="dateOffset" id="{{containerId}}30" value="30"><label for="{{containerId}}30">30 Days</label>\
         <input type="radio" name="dateOffset" id="{{containerId}}365" value="365"><label for="{{containerId}}365">365 Days</label>\
       </div>\
