@@ -1,4 +1,12 @@
 sales-analytics-widgets
 =======================
 
-Sales Analytics JavaScript Widgets
+Use below code to embed Sales Analytics Dashboard to your site.
+-----------------------
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script type="text/javascript" src="LINK_TO_WIDGETS"></script>
+    <script type="text/javascript">
+    _TPW.init();
+    _TPW.load('SalesMetrics', {container: 'containerSalesMetrics', tpProxy: 'SELLER_NAME', apiKey: API_KEY});
+    _TPW.load('SellerSales', {container: 'containerSellerSales', tpProxy: 'SELLER_NAME', apiKey: API_KEY});
+    </script>
