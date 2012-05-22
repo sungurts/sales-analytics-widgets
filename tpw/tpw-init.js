@@ -39,10 +39,6 @@ TPW = function () {
             title: tpl.groupForm({keyword: '', containerId: groupInfo.container}),
             content: ''
           }));
-          self.jQuery('#' + groupInfo.container + ' input[name="dateOffset"]').change(function (event) {
-            self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit();
-          });
-          self.jQuery('#' + groupInfo.container + ' .tpw-btn-group').buttonset();
           self.jQuery('#' + groupInfo.container + ' .tpw-group-form').submit(function (eventObj) {
             self.reInitCount = 0;
             self.jQuery(this).find('.tpw-submit').attr('disabled', 'disabled');
@@ -50,12 +46,7 @@ TPW = function () {
             self.jQuery.each(self.jQuery(this).serializeArray(), function (formIndex, formElement) {
               formElements[formElement.name] = formElement.value;
             });
-            self.jQuery.each(self.widgetGroups[index].widgets, function (i, widget) {
-              var newConfig = widget.config;
-              newConfig.keyword = formElements.keyword;
-              newConfig.dateOffset = formElements.dateOffset;
-              widget.init(self, newConfig);
-            });
+            self.jQuery(self).trigger(groupInfo.groupId + "FormSubmit", {keyword: formElements.keyword, dateOffset: formElements.dateOffset})
             return false;
           });
         });
@@ -155,7 +146,13 @@ TPW = function () {
     });
   }
   
-  
+  this.serializeToJson = function (serializedArray) {
+    var json = {};
+    self.jQuery.map(serializedArray, function(n, i){
+      json[n['name']] = n['value'];
+    });
+    return json;
+  }
   
   var initTemplates = function () {
     // template cannot be initialized until handlebars has loaded
@@ -170,12 +167,12 @@ TPW = function () {
       </div>');
     tpl.groupForm = Handlebars.compile('<form class="tpw-group-form">\
       Keywords: <input type="text" name="keyword" size="15" value="{{keyword}}">\
-      <div class="tpw-btn-group" data-toggle="buttons-radio" style="float: right;">\
-        <input type="radio" name="dateOffset" id="{{containerId}}1" value="1" checked="checked"><label for="{{containerId}}1">1 Day</label>\
-        <input type="radio" name="dateOffset" id="{{containerId}}7" value="7"><label for="{{containerId}}7">7 Days</label>\
-        <input type="radio" name="dateOffset" id="{{containerId}}30" value="30"><label for="{{containerId}}30">30 Days</label>\
-        <input type="radio" name="dateOffset" id="{{containerId}}365" value="365"><label for="{{containerId}}365">365 Days</label>\
-      </div>\
+      Date Range: <select name="dateOffset" id="dateOffset">\
+        <option value="1">1 Day</option>\
+        <option value="7">7 Days</option>\
+        <option value="30">30 Days</option>\
+        <option value="365">365 Days</option>\
+      </select>\
       <input type="submit" name="tpw-submit" class="tpw-submit" value="GO">\
     </form>');
     tpl.styles = '<style type="text/css">\
