@@ -36,7 +36,7 @@ SellerSales = function () {
       border: 1px solid #bbb;\
       border-radius: 5px;\
       font-family: sans-serif;\
-      font-size: .75em;\
+      font-size: 12px;\
       color: #555;\
     }\
     .tpw-summary-bar div.tpw-message, .tpw-summary-bar div.tpw-loading { margin: 15px; }\
